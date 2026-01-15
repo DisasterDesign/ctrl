@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Phone,
   Users,
@@ -17,26 +16,24 @@ import Card from "@/components/ui/Card";
 import SectionDivider from "@/components/ui/SectionDivider";
 import FloatingTechShapes from "@/components/ui/FloatingTechShapes";
 
-const rotatingWords = ["שליטה", "אחריות", "שקט", "סדר"];
-
 const floatingCards = [
   {
     icon: CheckCircle,
-    text: "חשבונית ספקים אושרה",
+    text: "שרית, הצלת אותי עם הספק הזה! תודה.",
     color: "text-green-500",
     position: "top-4 right-4 lg:top-8 lg:-right-4",
     delay: 0,
   },
   {
     icon: TrendingUp,
-    text: "חיסכון 12% בתקציב",
+    text: "סוף סוף יש סדר בניירת. איזה שקט.",
     color: "text-blue-500",
     position: "bottom-8 left-4 lg:bottom-16 lg:-left-8",
     delay: 0.5,
   },
   {
     icon: UserCheck,
-    text: "קבלן שלד - חוזה חתום",
+    text: "הכל מתויק ומטופל.",
     color: "text-purple-500",
     position: "top-1/2 -right-4 lg:top-1/3 lg:-right-12",
     delay: 1,
@@ -84,34 +81,6 @@ const promiseItems = [
     description: "כל פרויקט מקבל את המעטפת שמתאימה לו בדיוק.",
   },
 ];
-
-function RotatingText() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % rotatingWords.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <span className="inline-block relative h-[1.2em] overflow-hidden align-bottom">
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={rotatingWords[index]}
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -40, opacity: 0 }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="inline-block text-blue-600"
-        >
-          {rotatingWords[index]}
-        </motion.span>
-      </AnimatePresence>
-    </span>
-  );
-}
 
 function FloatingCard({
   icon: Icon,
@@ -169,7 +138,7 @@ export default function Home() {
               >
                 <span className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 text-xs font-semibold tracking-wide px-4 py-2 rounded-full mb-8">
                   <span className="w-1.5 h-1.5 bg-blue-600 rounded-full" />
-                  CTRL // Construction OS
+                  הפינה השקטה שלך בתוך הכאוס.
                 </span>
               </motion.div>
 
@@ -180,11 +149,9 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
-                הגיע הזמן לקחת
+                הופכים את אתר הבנייה
                 <br />
-                <RotatingText />
-                <br />
-                על הפרויקטים שלך.
+                <span className="text-blue-600">לבית.</span>
               </motion.h1>
 
               {/* Sub-headline */}
@@ -194,9 +161,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.5 }}
               >
-                שירותי ניהול בק-אופיס, כספים ורכש ליזמי נדל״ן.
-                <br />
-                אתם תבנו את הבניינים, אנחנו נדאג שהעסק ידפוק כמו שעון.
+                שירותי ניהול אישיים ליזמי נדל״ן. אתם תבנו, שרית תדאג לכל השאר – מהניירת ועד הספקים, באווירה משפחתית ובלי כאבי ראש.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -208,7 +173,7 @@ export default function Home() {
               >
                 <Button href="/contact" variant="primary" size="lg">
                   <span className="flex items-center gap-2">
-                    תיאום פגישת אבחון
+                    בואו נשב על קפה
                     <ArrowLeft className="w-4 h-4" />
                   </span>
                 </Button>
@@ -228,8 +193,8 @@ export default function Home() {
               {/* Main Image */}
               <div className="relative">
                 <img
-                  src="/hero.jpeg"
-                  alt="CTRL - ניהול פרויקטי בנייה"
+                  src="/hero-sarit.png"
+                  alt="שרית - ניהול אישי לפרויקטי בנייה"
                   className="w-full h-auto rounded-2xl"
                 />
 
