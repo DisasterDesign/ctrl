@@ -193,7 +193,7 @@ export default function Home() {
               {/* Main Image */}
               <div className="relative">
                 <img
-                  src="/hero.jpeg"
+                  src="/hero.png"
                   alt="שרית - ניהול אישי לפרויקטי בנייה"
                   className="w-full h-auto rounded-2xl"
                 />
