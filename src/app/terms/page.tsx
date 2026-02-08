@@ -1,26 +1,25 @@
 import { Metadata } from "next";
 import FadeIn from "@/components/ui/FadeIn";
-import SectionDivider from "@/components/ui/SectionDivider";
 
 export const metadata: Metadata = {
-  title: "תנאי שימוש | CTRL",
-  description: "תנאי השימוש באתר CTRL - הגדרת הזכויות והחובות בשימוש באתר.",
+  title: "תנאי שימוש | CLARITY",
+  description: "תנאי השימוש באתר CLARITY - הגדרת הזכויות והחובות בשימוש באתר.",
 };
 
 const sections = [
   {
     title: "1. כללי",
-    content: `ברוכים הבאים לאתר CTRL. השימוש באתר זה כפוף לתנאים המפורטים להלן. גלישה באתר מהווה הסכמה לתנאים אלה.`,
+    content: `ברוכים הבאים לאתר CLARITY. השימוש באתר זה כפוף לתנאים המפורטים להלן. גלישה באתר מהווה הסכמה לתנאים אלה.`,
   },
   {
     title: "2. השירותים",
-    content: `CTRL מספקת שירותי ניהול בק-אופיס לעסקים קטנים ובינוניים. המידע באתר הוא למטרות מידע כללי בלבד ואינו מהווה הצעה מחייבת.`,
+    content: `CLARITY מספקת שירותי ניהול בק-אופיס לעסקים קטנים ובינוניים. המידע באתר הוא למטרות מידע כללי בלבד ואינו מהווה הצעה מחייבת.`,
   },
   {
     title: "3. קניין רוחני",
     content: null,
     list: [
-      "כל התכנים באתר (טקסט, עיצוב, לוגו, תמונות) הם רכושה של CTRL",
+      "כל התכנים באתר (טקסט, עיצוב, לוגו, תמונות) הם רכושה של CLARITY",
       "אין להעתיק, לשכפל או להפיץ תכנים ללא אישור בכתב",
     ],
   },
@@ -37,15 +36,15 @@ const sections = [
     content: null,
     list: [
       'המידע באתר מסופק "כמות שהוא" (AS IS)',
-      "CTRL אינה אחראית לנזקים ישירים או עקיפים הנובעים מהשימוש באתר",
-      "CTRL אינה אחראית לאתרים חיצוניים המקושרים מהאתר",
+      "CLARITY אינה אחראית לנזקים ישירים או עקיפים הנובעים מהשימוש באתר",
+      "CLARITY אינה אחראית לאתרים חיצוניים המקושרים מהאתר",
     ],
   },
   {
     title: "6. שינויים באתר ובתנאים",
     content: null,
     list: [
-      "CTRL רשאית לשנות את תכני האתר ותנאי השימוש בכל עת",
+      "CLARITY רשאית לשנות את תכני האתר ותנאי השימוש בכל עת",
       "המשך השימוש לאחר שינויים מהווה הסכמה לתנאים המעודכנים",
     ],
   },
@@ -57,8 +56,8 @@ const sections = [
     title: "8. יצירת קשר",
     content: "לשאלות בנוגע לתנאי השימוש:",
     contact: {
-      email: "hello@ctrl.co.il",
-      phone: "050-000-0000",
+      email: "sarit@ctrl.co.il",
+      phone: "054-670-1232",
     },
   },
 ];
@@ -88,8 +87,6 @@ export default function TermsPage() {
           </FadeIn>
         </div>
       </section>
-
-      <SectionDivider />
 
       {/* Content Section */}
       <section className="relative py-24 lg:py-32 px-6 lg:px-8">

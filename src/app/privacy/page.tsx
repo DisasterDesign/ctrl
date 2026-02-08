@@ -1,16 +1,15 @@
 import { Metadata } from "next";
 import FadeIn from "@/components/ui/FadeIn";
-import SectionDivider from "@/components/ui/SectionDivider";
 
 export const metadata: Metadata = {
-  title: "מדיניות הפרטיות | CTRL",
-  description: "מדיניות הפרטיות של CTRL - כיצד אנו אוספים, משתמשים ומגנים על המידע שלך.",
+  title: "מדיניות הפרטיות | CLARITY",
+  description: "מדיניות הפרטיות של CLARITY - כיצד אנו אוספים, משתמשים ומגנים על המידע שלך.",
 };
 
 const sections = [
   {
     title: "1. מבוא",
-    content: `CTRL ("אנחנו", "שלנו") מחויבת להגן על פרטיותך. מדיניות זו מסבירה כיצד אנו אוספים, משתמשים ומגנים על המידע שלך בהתאם לחוק הגנת הפרטיות, התשמ"א-1981 ותקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017.`,
+    content: `CLARITY ("אנחנו", "שלנו") מחויבת להגן על פרטיותך. מדיניות זו מסבירה כיצד אנו אוספים, משתמשים ומגנים על המידע שלך בהתאם לחוק הגנת הפרטיות, התשמ"א-1981 ותקנות הגנת הפרטיות (אבטחת מידע), התשע"ז-2017.`,
   },
   {
     title: "2. מידע שאנו אוספים",
@@ -76,8 +75,8 @@ const sections = [
     title: "9. יצירת קשר",
     content: "לשאלות בנוגע למדיניות הפרטיות או לבקשות בנוגע למידע שלך, ניתן לפנות אלינו:",
     contact: {
-      email: "hello@ctrl.co.il",
-      phone: "050-000-0000",
+      email: "sarit@ctrl.co.il",
+      phone: "054-670-1232",
     },
   },
 ];
@@ -107,8 +106,6 @@ export default function PrivacyPage() {
           </FadeIn>
         </div>
       </section>
-
-      <SectionDivider />
 
       {/* Content Section */}
       <section className="relative py-24 lg:py-32 px-6 lg:px-8">

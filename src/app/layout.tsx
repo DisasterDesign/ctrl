@@ -3,6 +3,7 @@ import { Heebo } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -12,20 +13,24 @@ const heebo = Heebo({
 });
 
 export const metadata: Metadata = {
-  title: "CTRL | יד ימין ולב שמאל של העסק שלך",
+  title: "CLARITY | ניהול פיננסי ותפעולי לבעלי עסקים",
   description:
-    "ניהול בק-אופיס בוטיק לעסקים קטנים ובינוניים. שליטה פיננסית, ניהול ממשקים, וסדר בתהליכים — כדי שתהיה פנוי לפתח את העסק.",
+    "בהירות בעסק. שקט בניהול. ניהול פיננסי ותפעולי לבעלי עסקים — סדר בכספים, בתהליכים ובניהול השוטף.",
   keywords: [
-    "ניהול עסקי",
-    "בק-אופיס",
-    "שליטה פיננסית",
-    "ניהול ממשקים",
-    "תהליכים",
-    "עסקים קטנים",
+    "ניהול פיננסי",
+    "ניהול תפעולי",
+    "בעלי עסקים",
+    "בהירות עסקית",
+    "ליווי עסקי",
+    "סדר בעסק",
   ],
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg",
+  },
   openGraph: {
-    title: "CTRL | יד ימין ולב שמאל של העסק שלך",
-    description: "ניהול בק-אופיס בוטיק לעסקים קטנים ובינוניים",
+    title: "CLARITY | ניהול פיננסי ותפעולי לבעלי עסקים",
+    description: "בהירות בעסק. שקט בניהול. סדר בכספים, בתהליכים ובניהול השוטף.",
     locale: "he_IL",
     type: "website",
   },
@@ -42,6 +47,7 @@ export default function RootLayout({
         <Navigation />
         <main className="relative z-10">{children}</main>
         <Footer />
+        <WhatsAppFloat />
       </body>
     </html>
   );
