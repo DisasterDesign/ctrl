@@ -15,13 +15,13 @@ export default function Testimonials() {
           </FadeIn>
 
           <FadeIn delay={0.2}>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#142850] mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1A2B3C] mb-6">
               {testimonials.title}
             </h2>
           </FadeIn>
 
           <FadeIn delay={0.3}>
-            <p className="text-lg text-[#666666] max-w-2xl mx-auto">
+            <p className="text-lg text-[#718096] max-w-2xl mx-auto">
               {testimonials.description}
             </p>
           </FadeIn>
@@ -31,24 +31,24 @@ export default function Testimonials() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {testimonials.items.map((item, index) => (
             <FadeIn key={index} delay={0.4 + index * 0.1}>
-              <div className="relative bg-[#F7F9FB] rounded-xl p-8 h-full">
+              <div className="relative bg-[#F5F7FA] rounded-xl p-8 h-full">
                 {/* Quote icon */}
                 <div className="absolute top-4 left-4">
-                  <Quote className="w-8 h-8 text-[#0090D5]/20" />
+                  <Quote className="w-8 h-8 text-[#3B82A0]/20" />
                 </div>
 
                 {/* Decorative line */}
-                <div className="w-12 h-1 bg-[#0090D5] mb-6" />
+                <div className="w-12 h-1 bg-[#3B82A0] mb-6" />
 
                 {/* Quote text */}
-                <p className="text-[#333333] mb-6 leading-relaxed">
+                <p className="text-[#4A5568] mb-6 leading-relaxed">
                   &ldquo;{item.text}&rdquo;
                 </p>
 
                 {/* Author */}
                 <div>
-                  <div className="font-bold text-[#142850]">{item.name}</div>
-                  <div className="text-sm text-[#666666]">{item.role}</div>
+                  <div className="font-bold text-[#1A2B3C]">{item.name}</div>
+                  <div className="text-sm text-[#718096]">{item.role}</div>
                 </div>
               </div>
             </FadeIn>
@@ -57,7 +57,7 @@ export default function Testimonials() {
 
         {/* Stats Bar */}
         <FadeIn delay={0.8}>
-          <div className="bg-[#142850] rounded-2xl p-8 md:p-12">
+          <div className="bg-[#1A2B3C] rounded-2xl p-8 md:p-12">
             <div className="grid md:grid-cols-3 gap-8 text-center">
               {testimonials.stats.map((stat, index) => (
                 <div
@@ -68,7 +68,7 @@ export default function Testimonials() {
                       : ""
                   }`}
                 >
-                  <div className="text-3xl md:text-4xl font-bold text-[#0090D5] mb-2">
+                  <div className="text-3xl md:text-4xl font-bold text-[#3B82A0] mb-2">
                     {stat.value}
                   </div>
                   <div className="text-white/70">{stat.label}</div>

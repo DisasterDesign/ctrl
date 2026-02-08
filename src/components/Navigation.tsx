@@ -36,7 +36,7 @@ export default function Navigation() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-[#333333] hover:text-[#0090D5] font-medium transition-colors"
+                className="text-[#4A5568] hover:text-[#3B82A0] font-medium transition-colors"
               >
                 {link.label}
               </a>
@@ -48,7 +48,7 @@ export default function Navigation() {
             href={`https://wa.me/${business.whatsapp}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-[#0090D5] hover:bg-[#0077b3] text-white font-medium rounded-lg transition-all duration-300"
+            className="hidden md:inline-flex items-center gap-2 px-6 py-3 bg-[#3B82A0] hover:bg-[#2D6A84] text-white font-medium rounded-lg transition-all duration-300"
           >
             <MessageCircle className="w-4 h-4" />
             {nav.cta}
@@ -57,7 +57,7 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-[#333333] hover:text-[#0090D5]"
+            className="md:hidden p-2 text-[#4A5568] hover:text-[#3B82A0]"
             aria-label="תפריט"
           >
             {isMenuOpen ? (
@@ -70,14 +70,14 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 border-t border-[#e2e8f0]">
+          <div className="md:hidden py-6 border-t border-[#E2E8F0]">
             <div className="flex flex-col gap-4">
               {nav.links.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}
                   onClick={handleNavClick}
-                  className="text-[#333333] hover:text-[#0090D5] font-medium py-2 transition-colors"
+                  className="text-[#4A5568] hover:text-[#3B82A0] font-medium py-2 transition-colors"
                 >
                   {link.label}
                 </a>
@@ -86,7 +86,7 @@ export default function Navigation() {
                 href={`https://wa.me/${business.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#0090D5] hover:bg-[#0077b3] text-white font-medium rounded-lg transition-all duration-300 mt-4"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#3B82A0] hover:bg-[#2D6A84] text-white font-medium rounded-lg transition-all duration-300 mt-4"
               >
                 <MessageCircle className="w-4 h-4" />
                 {nav.cta}

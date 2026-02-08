@@ -1,23 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  /* Done1 Style Palette */
-  --primary: #142850;
-  --primary-light: #1a3a6e;
-  --primary-dark: #0a1628;
-  --action: #0090D5;
-  --action-hover: #0077b3;
-  --action-light: #e6f4fa;
-  --background: #F7F9FB;
-  --background-alt: #ffffff;
+  /* CLARITY Palette */
+  --primary: #1A2B3C;
+  --primary-light: #2a3f52;
+  --primary-dark: #111d2a;
+  --action: #3B82A0;
+  --action-hover: #2D6A84;
+  --action-light: #E8F4F8;
+  --background: #FAFBFC;
+  --background-alt: #F5F7FA;
   --surface: #ffffff;
-  --border: #e2e8f0;
+  --border: #E2E8F0;
   --border-light: #f1f5f9;
-  --text-heading: #142850;
-  --text-body: #333333;
-  --text-muted: #666666;
+  --text-heading: #1A2B3C;
+  --text-body: #4A5568;
+  --text-muted: #718096;
   --text-light: #94a3b8;
+  --success: #68B5A0;
   --whatsapp: #25D366;
+  --shadow: rgba(26, 43, 60, 0.06);
 }
 
 @theme inline {
@@ -34,6 +36,7 @@
   --color-text-heading: var(--text-heading);
   --color-text-body: var(--text-body);
   --color-text-muted: var(--text-muted);
+  --color-success: var(--success);
   --color-whatsapp: var(--whatsapp);
   --font-main: var(--font-heebo);
 }
@@ -99,32 +102,17 @@ a {
   text-decoration: none;
 }
 
-/* Gradient Text Utility */
-.gradient-text {
-  background: linear-gradient(135deg, var(--action) 0%, #00b4d8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Glass Effect - Light */
+/* Glass Effect - Navigation */
 .glass {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(250, 251, 252, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
 
-/* Glass Effect - Dark */
-.glass-dark {
-  background: rgba(20, 40, 80, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* Dark Section Background */
-.bg-dark-gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+/* Light Section Gradient */
+.bg-light-gradient {
+  background: linear-gradient(180deg, var(--background) 0%, #F0F4F8 100%);
 }
 
 /* Badge Style */
@@ -138,13 +126,35 @@ a {
   border-radius: 9999px;
 }
 
-/* Card Shadow */
+/* Card Styles */
 .card-shadow {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.card-shadow-hover {
+  transition: all 0.3s ease;
 }
 
 .card-shadow-hover:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  border-color: var(--action) !important;
+  box-shadow: 0 8px 24px rgba(59, 130, 160, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Hero Clarity Line Animation */
+@keyframes clarity-line {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.clarity-line::after {
+  content: '';
+  display: block;
+  height: 3px;
+  margin-top: 0.75rem;
+  background: linear-gradient(90deg, transparent, var(--action), transparent);
+  animation: clarity-line 1.5s ease-out 0.5s forwards;
+  width: 0;
 }
 
 /* WhatsApp Button Pulse */
@@ -166,4 +176,59 @@ a {
   border-radius: 9999px;
   background: var(--whatsapp);
   animation: pulse-ring 2s ease-out infinite;
+}
+
+/* ── Hero SVG Animation ── */
+.hero-anim {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50%;
+  height: 85%;
+  pointer-events: none;
+}
+
+.hero-shape {
+  will-change: transform, opacity;
+  animation: hero-organize 9s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes hero-organize {
+  0%, 10% {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+    opacity: 0.25;
+  }
+  40%, 60% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(0, 0) rotate(0deg) scale(1.03);
+    opacity: 1;
+  }
+  90%, 100% {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+    opacity: 0.25;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero-anim {
+    display: none;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .clarity-line::after {
+    animation: none;
+    width: 100%;
+  }
+  .hero-shape {
+    animation: none;
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.8;
+  }
 }
