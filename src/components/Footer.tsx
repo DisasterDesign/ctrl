@@ -120,6 +120,16 @@ export default function Footer() {
             </div>
             <p className="text-white/60 text-sm">{footer.madeWith}</p>
           </div>
+          <div className="mt-6 text-center">
+            <a
+              href="https://www.fuzionwebz.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-white/30 hover:text-white/60 transition-opacity duration-300"
+            >
+              Built by Fuzion
+            </a>
+          </div>
         </div>
       </div>
     </footer>
