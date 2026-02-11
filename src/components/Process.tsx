@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { MessageCircle } from "lucide-react";
 import { siteContent } from "@/lib/content";
 import FadeIn from "@/components/ui/FadeIn";
@@ -14,24 +15,26 @@ export default function Process() {
           </h2>
         </FadeIn>
 
-        {/* Desktop: horizontal, Mobile: vertical */}
-        <div className="hidden md:flex items-center justify-between mb-14">
+        {/* Desktop: horizontal */}
+        <div className="hidden md:flex items-start justify-between mb-14">
           {process.steps.map((step, index) => (
-            <FadeIn key={index} delay={0.2 + index * 0.12}>
-              <div className="flex flex-col items-center text-center flex-1">
-                <div className="w-12 h-12 bg-[#3B82A0] rounded-full flex items-center justify-center mb-3">
-                  <span className="text-white font-bold text-lg">
-                    {step.number}
-                  </span>
+            <Fragment key={index}>
+              <FadeIn delay={0.2 + index * 0.12}>
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-12 h-12 bg-[#3B82A0] rounded-full flex items-center justify-center mb-3">
+                    <span className="text-white font-bold text-lg">
+                      {step.number}
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-medium text-[#1A2B3C] max-w-[140px]">
+                    {step.title}
+                  </h3>
                 </div>
-                <h3 className="text-sm font-medium text-[#1A2B3C] max-w-[140px]">
-                  {step.title}
-                </h3>
-              </div>
+              </FadeIn>
               {index < process.steps.length - 1 && (
-                <div className="h-[2px] flex-1 bg-gradient-to-l from-[#E2E8F0] to-[#3B82A0] mx-2 mt-[-2rem]" />
+                <div className="h-[2px] flex-1 bg-gradient-to-l from-[#E2E8F0] to-[#3B82A0] mx-2 mt-6" />
               )}
-            </FadeIn>
+            </Fragment>
           ))}
         </div>
 
