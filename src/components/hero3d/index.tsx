@@ -88,9 +88,13 @@ export default function Hero3D() {
     }
 
     let cleanup: (() => void) | undefined;
-    init().then((fn) => {
-      cleanup = fn;
-    });
+    init()
+      .then((fn) => {
+        cleanup = fn;
+      })
+      .catch((err) => {
+        console.error("[Hero3D] init failed:", err);
+      });
 
     return () => {
       disposed = true;

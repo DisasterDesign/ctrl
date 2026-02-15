@@ -54,8 +54,8 @@ export class PhysicsWorld {
     if (!this.enabled) return;
     this.world.step(PHYSICS.fixedTimeStep, undefined, PHYSICS.maxSubSteps);
     for (const { body, mesh } of this.pairs) {
-      mesh.position.copy(body.position as unknown as THREE.Vector3);
-      mesh.quaternion.copy(body.quaternion as unknown as THREE.Quaternion);
+      mesh.position.set(body.position.x, body.position.y, body.position.z);
+      mesh.quaternion.set(body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w);
     }
   }
 

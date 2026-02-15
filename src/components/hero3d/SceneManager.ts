@@ -39,7 +39,15 @@ export class SceneManager {
     this.renderer.setSize(width, height);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    container.appendChild(this.renderer.domElement);
+
+    // Canvas CSS — absolute-fill so it layers under overlays
+    const canvas = this.renderer.domElement;
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    container.prepend(canvas);
 
     // Lights
     const ambient = new THREE.AmbientLight(0xffffff, 0.5);
