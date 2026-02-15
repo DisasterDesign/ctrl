@@ -1,4 +1,3 @@
-import { Check } from "lucide-react";
 import { siteContent } from "@/lib/content";
 import FadeIn from "@/components/ui/FadeIn";
 
@@ -6,62 +5,52 @@ export default function About() {
   const { about } = siteContent;
 
   return (
-    <section id="about" className="py-24 lg:py-32 bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section id="about" className="py-20 lg:py-28">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
           <div>
             <FadeIn>
-              <span className="badge mb-6">{about.badge}</span>
+              <p className="text-sm font-medium text-[#3848FE] mb-4">{about.badge}</p>
             </FadeIn>
 
-            <FadeIn delay={0.2}>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1A2B3C] mb-4">
+            <FadeIn delay={0.15}>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
                 {about.title}
               </h2>
             </FadeIn>
 
-            <FadeIn delay={0.3}>
-              <p className="text-lg text-[#3B82A0] font-medium mb-6">
-                {about.subtitle}
-              </p>
+            <FadeIn delay={0.2}>
+              <p className="text-lg text-[#3848FE] font-medium mb-6">{about.subtitle}</p>
             </FadeIn>
 
-            <FadeIn delay={0.4}>
-              <div className="text-lg text-[#4A5568] leading-relaxed mb-10 whitespace-pre-line">
+            <FadeIn delay={0.3}>
+              <div className="text-lg text-[#333333] leading-relaxed mb-10 whitespace-pre-line">
                 {about.description}
               </div>
             </FadeIn>
 
-            {/* Values with checkmarks */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              {about.values.map((value, index) => (
-                <FadeIn key={index} delay={0.5 + index * 0.1}>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 bg-[#68B5A0]/15 rounded-full flex items-center justify-center">
-                      <Check className="w-4 h-4 text-[#68B5A0]" />
-                    </div>
-                    <span className="text-[#1A2B3C] font-medium">{value}</span>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
+            {/* Value badges */}
+            <FadeIn delay={0.4}>
+              <div className="flex flex-wrap gap-3">
+                {about.values.map((value, index) => (
+                  <span
+                    key={index}
+                    className="inline-block px-4 py-1.5 text-sm font-medium text-[#3848FE] border border-[#3848FE] rounded-full"
+                  >
+                    {value}
+                  </span>
+                ))}
+              </div>
+            </FadeIn>
           </div>
 
           {/* Image placeholder */}
-          <FadeIn delay={0.3}>
-            <div className="relative">
-              <div className="aspect-square max-w-md mx-auto bg-gradient-to-br from-[#3B82A0]/20 to-[#1A2B3C]/20 rounded-2xl shadow-xl overflow-hidden">
-                {/* Placeholder for actual image */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-[#1A2B3C]/30">
-                    <div className="text-6xl mb-4">👩‍💼</div>
-                    <p className="text-sm">תמונה של שרית</p>
-                  </div>
-                </div>
+          <FadeIn delay={0.2}>
+            <div className="aspect-square max-w-md mx-auto bg-white rounded-2xl border border-[rgba(0,0,0,0.08)] overflow-hidden flex items-center justify-center">
+              <div className="text-center text-[#666666]">
+                <p className="text-sm">תמונה של שרית</p>
               </div>
-              {/* Decorative element */}
-              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#3B82A0]/10 rounded-xl -z-10" />
             </div>
           </FadeIn>
         </div>

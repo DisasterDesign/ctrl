@@ -28,64 +28,64 @@ export default function CTASection() {
   };
 
   return (
-    <section id="contact" className="py-24 lg:py-32 bg-[#E8F4F8]">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section id="contact" className="py-20 lg:py-28">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* CTA Content */}
           <FadeIn>
             <div className="text-center lg:text-right">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1A2B3C] mb-6">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
                 {cta.title}
               </h2>
-              <p className="text-lg text-[#4A5568] mb-8 whitespace-pre-line">
+              <p className="text-lg text-[#333333] mb-8 whitespace-pre-line">
                 {cta.subtitle}
               </p>
               <a
                 href={`https://wa.me/${business.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#25D366] hover:bg-[#128C7E] text-white font-medium rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl mb-4"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300 mb-4"
               >
                 <MessageCircle className="w-5 h-5" />
                 {cta.button}
               </a>
-              <p className="text-sm text-[#718096]">{cta.subText}</p>
+              <p className="text-sm text-[#666666]">{cta.subText}</p>
             </div>
           </FadeIn>
 
           {/* Contact Form */}
           <FadeIn delay={0.2}>
-            <div className="bg-white rounded-2xl p-8 lg:p-10 border border-[#E2E8F0] shadow-[0_4px_12px_rgba(26,43,60,0.06)]">
+            <div className="bg-white rounded-2xl p-8 lg:p-10 border border-[rgba(0,0,0,0.08)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <div className="space-y-4">
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={cta.form.namePlaceholder}
-                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-lg text-[#1A2B3C] placeholder-[#718096] focus:border-[#3B82A0] focus:ring-1 focus:ring-[#3B82A0] transition-all"
+                  className="w-full px-4 py-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg text-black placeholder-[#666666] focus:border-[#3848FE] focus:ring-1 focus:ring-[#3848FE] transition-all"
                 />
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={cta.form.phonePlaceholder}
-                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-lg text-[#1A2B3C] placeholder-[#718096] focus:border-[#3B82A0] focus:ring-1 focus:ring-[#3B82A0] transition-all"
+                  className="w-full px-4 py-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg text-black placeholder-[#666666] focus:border-[#3848FE] focus:ring-1 focus:ring-[#3848FE] transition-all"
                 />
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={cta.form.messagePlaceholder}
                   rows={4}
-                  className="w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-lg text-[#1A2B3C] placeholder-[#718096] focus:border-[#3B82A0] focus:ring-1 focus:ring-[#3B82A0] transition-all resize-none"
+                  className="w-full px-4 py-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg text-black placeholder-[#666666] focus:border-[#3848FE] focus:ring-1 focus:ring-[#3848FE] transition-all resize-none"
                 />
                 <button
                   onClick={handleSubmitForm}
-                  className="inline-flex items-center justify-center gap-2 w-full px-6 py-4 bg-[#3B82A0] hover:bg-[#2D6A84] text-white font-medium rounded-lg transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300"
                 >
                   <MessageCircle className="w-5 h-5" />
                   {cta.form.button}
                 </button>
-                <p className="text-center text-sm text-[#718096]">
+                <p className="text-center text-sm text-[#666666]">
                   {cta.form.privacy}
                 </p>
               </div>

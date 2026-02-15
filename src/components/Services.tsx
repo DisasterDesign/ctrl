@@ -6,67 +6,51 @@ export default function Services() {
   const { services, business } = siteContent;
 
   return (
-    <section id="services" className="py-24 lg:py-32 bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section id="services" className="py-20 lg:py-28">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
         {/* Header */}
         <div className="text-center mb-16">
           <FadeIn>
-            <span className="badge mb-6">{services.badge}</span>
+            <p className="text-sm font-medium text-[#3848FE] mb-4">{services.badge}</p>
           </FadeIn>
-
-          <FadeIn delay={0.2}>
-            <h2 className="text-3xl md:text-4xl lg:text-[2.25rem] font-bold text-[#1A2B3C] mb-6">
-              {services.title}
-            </h2>
+          <FadeIn delay={0.15}>
+            <h2 className="text-3xl md:text-4xl font-bold">{services.title}</h2>
           </FadeIn>
         </div>
 
-        {/* Services Grid - 3 cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        {/* Services Grid */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
           {services.items.map((service, index) => (
-            <FadeIn key={service.title} delay={0.3 + index * 0.15}>
-              <div className="bg-white rounded-2xl p-8 border border-[#E2E8F0] shadow-[0_4px_12px_rgba(26,43,60,0.04)] hover:border-[#3B82A0] hover:shadow-[0_8px_24px_rgba(59,130,160,0.12)] hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
-                {/* Title */}
-                <h3 className="text-xl font-bold text-[#1A2B3C] mb-3">
-                  {service.title}
-                </h3>
+            <FadeIn key={service.title} delay={0.2 + index * 0.12}>
+              <div className="bg-white rounded-2xl p-8 border border-[rgba(0,0,0,0.08)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:border-[#3848FE] hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
+                <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                <p className="text-[#3848FE] font-medium text-sm mb-4">{service.description}</p>
 
-                {/* Description */}
-                <p className="text-[#3B82A0] font-medium mb-4">
-                  {service.description}
-                </p>
-
-                {/* Bullet points */}
                 <ul className="space-y-2 mb-6 flex-grow">
                   {service.bullets.map((bullet, i) => (
-                    <li key={i} className="flex items-start gap-2 text-[#4A5568]">
-                      <span className="text-[#3B82A0] mt-1 flex-shrink-0">
-                        •
-                      </span>
+                    <li key={i} className="flex items-start gap-2 text-[#333333]">
+                      <span className="text-[#3848FE] mt-1 flex-shrink-0">•</span>
                       {bullet}
                     </li>
                   ))}
                 </ul>
 
-                {/* Result */}
-                <div className="pt-4 border-t border-[#E2E8F0] bg-[#F5F7FA] -mx-8 -mb-8 px-8 py-5 rounded-b-2xl">
-                  <p className="text-[#1A2B3C] font-medium text-sm italic">
-                    {service.result}
-                  </p>
+                <div className="pt-4 border-t border-[rgba(0,0,0,0.08)]">
+                  <p className="text-[#666666] text-sm italic">{service.result}</p>
                 </div>
               </div>
             </FadeIn>
           ))}
         </div>
 
-        {/* CTA Button */}
-        <FadeIn delay={0.7}>
+        {/* CTA */}
+        <FadeIn delay={0.6}>
           <div className="text-center">
             <a
               href={`https://wa.me/${business.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#3B82A0] hover:bg-[#2D6A84] text-white font-medium rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300"
             >
               <MessageCircle className="w-5 h-5" />
               בוא/י נדבר
