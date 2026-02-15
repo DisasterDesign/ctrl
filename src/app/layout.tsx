@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import LenisProvider from "@/components/LenisProvider";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -44,10 +45,12 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl">
       <body className={`${heebo.variable} font-sans antialiased`}>
-        <Navigation />
-        <main className="relative z-10">{children}</main>
-        <Footer />
-        <WhatsAppFloat />
+        <LenisProvider>
+          <Navigation />
+          <main className="relative z-10">{children}</main>
+          <Footer />
+          <WhatsAppFloat />
+        </LenisProvider>
       </body>
     </html>
   );

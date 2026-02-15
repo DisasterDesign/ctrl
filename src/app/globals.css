@@ -42,10 +42,6 @@
 }
 
 /* Base Styles */
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   background: var(--background);
   color: var(--text-body);
@@ -178,57 +174,10 @@ a {
   animation: pulse-ring 2s ease-out infinite;
 }
 
-/* ── Hero SVG Animation ── */
-.hero-anim {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 50%;
-  height: 85%;
-  pointer-events: none;
-}
-
-.hero-shape {
-  will-change: transform, opacity;
-  animation: hero-organize 9s ease-in-out infinite;
-  animation-delay: var(--delay, 0s);
-}
-
-@keyframes hero-organize {
-  0%, 10% {
-    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
-    opacity: 0.25;
-  }
-  40%, 60% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 1;
-  }
-  50% {
-    transform: translate(0, 0) rotate(0deg) scale(1.03);
-    opacity: 1;
-  }
-  90%, 100% {
-    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
-    opacity: 0.25;
-  }
-}
-
-@media (max-width: 1023px) {
-  .hero-anim {
-    display: none;
-  }
-}
-
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .clarity-line::after {
     animation: none;
     width: 100%;
-  }
-  .hero-shape {
-    animation: none;
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0.8;
   }
 }
