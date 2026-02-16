@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { siteContent } from "@/lib/content";
 
 export default function Hero3D() {
-  const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   const { hero } = siteContent;
@@ -18,8 +16,7 @@ export default function Hero3D() {
     }
 
     const canvas = canvasRef.current;
-    const overlay = overlayRef.current;
-    if (!canvas || !overlay) return;
+    if (!canvas) return;
 
     let disposed = false;
     let cleanup: (() => void) | undefined;
@@ -27,7 +24,7 @@ export default function Hero3D() {
     import("./scene")
       .then(({ initHero3D }) => {
         if (disposed) return;
-        cleanup = initHero3D(canvas, overlay);
+        cleanup = initHero3D(canvas);
       })
       .catch((err) => {
         console.error("[Hero3D] init failed:", err);
@@ -43,23 +40,36 @@ export default function Hero3D() {
     return (
       <section
         id="hero"
-        className="relative flex items-center justify-center text-center"
-        style={{ height: "100vh", background: "#F0F1FB", padding: "0 24px" }}
+        className="relative flex items-center justify-center"
+        style={{ height: "100vh", background: "#F0F1FB", padding: "24px" }}
       >
-        <div>
-          <p className="text-sm font-medium text-[#3848FE] mb-4 tracking-wide">
+        <div
+          className="relative w-full flex flex-col items-center justify-center text-center"
+          style={{
+            maxWidth: 1400,
+            height: "calc(100vh - 120px)",
+            background: "#000000",
+            borderRadius: 24,
+            padding: "0 32px",
+          }}
+        >
+          <p className="text-[0.85rem] font-medium text-[#3848FE] mb-4 tracking-[0.08em]">
             {hero.badge}
           </p>
           <h1
             style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
-            className="font-bold leading-[1.15] mb-6"
+            className="font-bold leading-[1.15] mb-6 text-white"
           >
             {hero.title}
             <br />
             {hero.titleHighlight}
           </h1>
-          <p className="text-[#333] max-w-[600px] mx-auto leading-relaxed mb-10 whitespace-pre-line"
-            style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)" }}
+          <p
+            className="max-w-[550px] leading-relaxed mb-10 whitespace-pre-line"
+            style={{
+              fontSize: "clamp(0.95rem, 1.8vw, 1.1rem)",
+              color: "rgba(255,255,255,0.7)",
+            }}
           >
             {hero.description}
           </p>
@@ -72,7 +82,11 @@ export default function Hero3D() {
             </a>
             <a
               href="#services"
-              className="border-[1.5px] border-[#3848FE] text-[#3848FE] px-8 py-3.5 rounded-full font-medium hover:bg-[rgba(56,72,254,0.08)] transition-colors"
+              className="text-white px-8 py-3.5 rounded-full font-medium transition-colors"
+              style={{
+                border: "1.5px solid rgba(255,255,255,0.3)",
+                backdropFilter: "blur(4px)",
+              }}
             >
               {hero.cta2}
             </a>
@@ -84,65 +98,71 @@ export default function Hero3D() {
 
   return (
     <section
-      ref={sectionRef}
       id="hero"
-      className="relative overflow-hidden"
-      style={{ height: "100vh", background: "#F0F1FB" }}
+      className="relative flex items-center justify-center"
+      style={{ height: "100vh", background: "#F0F1FB", padding: "24px" }}
     >
-      {/* Layer 1 (z-1): Text — behind everything */}
+      {/* Black box container */}
       <div
-        className="absolute inset-0 z-[1] flex flex-col items-center justify-center text-center"
-        style={{ padding: "0 24px" }}
-      >
-        <p className="text-sm font-medium text-[#3848FE] mb-4 tracking-wide">
-          {hero.badge}
-        </p>
-        <h1
-          style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
-          className="font-bold leading-[1.15] mb-6"
-        >
-          {hero.title}
-          <br />
-          {hero.titleHighlight}
-        </h1>
-        <p
-          className="text-[#333] max-w-[600px] leading-relaxed mb-10 whitespace-pre-line"
-          style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)" }}
-        >
-          {hero.description}
-        </p>
-        <div className="flex gap-4 flex-wrap justify-center relative z-[10]">
-          <a
-            href="#contact"
-            className="bg-[#3848FE] text-white px-8 py-3.5 rounded-full font-medium hover:bg-[#2B35CC] transition-colors"
-          >
-            {hero.cta1}
-          </a>
-          <a
-            href="#services"
-            className="border-[1.5px] border-[#3848FE] text-[#3848FE] px-8 py-3.5 rounded-full font-medium hover:bg-[rgba(56,72,254,0.08)] transition-colors"
-          >
-            {hero.cta2}
-          </a>
-        </div>
-      </div>
-
-      {/* Layer 2 (z-2): Frosted glass overlay */}
-      <div
-        ref={overlayRef}
-        className="absolute inset-0 z-[2] pointer-events-none"
+        className="relative w-full overflow-hidden"
         style={{
-          backdropFilter: "blur(6px)",
-          WebkitBackdropFilter: "blur(6px)",
-          background: "rgba(240, 241, 251, 0.12)",
+          maxWidth: 1400,
+          height: "calc(100vh - 120px)",
+          background: "#000000",
+          borderRadius: 24,
         }}
-      />
+      >
+        {/* Text — on top of everything */}
+        <div
+          className="absolute inset-0 z-[5] flex flex-col items-center justify-center text-center"
+          style={{ padding: "0 32px" }}
+        >
+          <p className="text-[0.85rem] font-medium text-[#3848FE] mb-4 tracking-[0.08em]">
+            {hero.badge}
+          </p>
+          <h1
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+            className="font-bold leading-[1.15] mb-6 text-white"
+          >
+            {hero.title}
+            <br />
+            {hero.titleHighlight}
+          </h1>
+          <p
+            className="max-w-[550px] leading-relaxed mb-10 whitespace-pre-line"
+            style={{
+              fontSize: "clamp(0.95rem, 1.8vw, 1.1rem)",
+              color: "rgba(255,255,255,0.7)",
+            }}
+          >
+            {hero.description}
+          </p>
+          <div className="flex gap-4 flex-wrap justify-center">
+            <a
+              href="#contact"
+              className="bg-[#3848FE] text-white px-8 py-3.5 rounded-full font-medium hover:bg-[#2B35CC] transition-colors"
+            >
+              {hero.cta1}
+            </a>
+            <a
+              href="#services"
+              className="text-white px-8 py-3.5 rounded-full font-medium transition-colors"
+              style={{
+                border: "1.5px solid rgba(255,255,255,0.3)",
+                backdropFilter: "blur(4px)",
+              }}
+            >
+              {hero.cta2}
+            </a>
+          </div>
+        </div>
 
-      {/* Layer 3 (z-3): Three.js Canvas — on top, pointer-events none so CTAs work */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-[3] w-full h-full pointer-events-none"
-      />
+        {/* Three.js Canvas */}
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 z-[2] w-full h-full"
+        />
+      </div>
     </section>
   );
 }

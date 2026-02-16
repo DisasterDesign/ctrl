@@ -7,19 +7,18 @@ interface SceneObject {
   rotSpeed: THREE.Vector3;
 }
 
-export function initHero3D(
-  canvasElement: HTMLCanvasElement,
-  overlayElement: HTMLDivElement
-): () => void {
+export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
+  const container = canvasElement.parentElement!;
+
   // ============ RENDERER ============
   const renderer = new THREE.WebGLRenderer({
     canvas: canvasElement,
-    alpha: true,
+    alpha: false,
     antialias: true,
   });
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x000000, 1);
+  renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x000000, 0);
 
   // ============ SCENE ============
   const scene = new THREE.Scene();
@@ -27,7 +26,7 @@ export function initHero3D(
   // ============ CAMERA ============
   const camera = new THREE.PerspectiveCamera(
     45,
-    window.innerWidth / window.innerHeight,
+    container.clientWidth / container.clientHeight,
     0.1,
     100
   );
@@ -45,43 +44,39 @@ export function initHero3D(
   scene.add(fillLight);
 
   // ============ MATERIALS ============
-  function glassMat(color: number, opacity: number) {
-    return new THREE.MeshPhysicalMaterial({
+  function solidMat(color: number) {
+    return new THREE.MeshStandardMaterial({
       color,
-      transparent: true,
-      opacity,
-      roughness: 0.15,
-      metalness: 0.0,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
-      side: THREE.DoubleSide,
+      transparent: false,
+      roughness: 0.25,
+      metalness: 0.1,
     });
   }
 
   const materials = [
-    glassMat(0x3848fe, 0.7),
-    glassMat(0x3848fe, 0.5),
-    glassMat(0x6b7cff, 0.6),
-    glassMat(0xffffff, 0.45),
-    glassMat(0xc0c4e0, 0.35),
-    glassMat(0x8b92ff, 0.5),
+    solidMat(0x3848fe), // blue primary
+    solidMat(0x3848fe), // blue primary
+    solidMat(0x2b35cc), // dark blue
+    solidMat(0x6b7cff), // light blue
+    solidMat(0xffffff), // white
+    solidMat(0xddddee), // light gray
   ];
 
   // ============ GEOMETRIES ============
   const geometries: THREE.BufferGeometry[] = [
-    new THREE.IcosahedronGeometry(0.5, 0),
-    new THREE.OctahedronGeometry(0.45, 0),
-    new THREE.TorusGeometry(0.35, 0.15, 16, 32),
-    new THREE.BoxGeometry(0.55, 0.55, 0.55),
-    new THREE.SphereGeometry(0.3, 32, 32),
-    new THREE.TetrahedronGeometry(0.5, 0),
-    new THREE.CylinderGeometry(0.25, 0.25, 0.5, 8),
-    new THREE.DodecahedronGeometry(0.4, 0),
+    new THREE.IcosahedronGeometry(0.7, 0),
+    new THREE.OctahedronGeometry(0.65, 0),
+    new THREE.TorusGeometry(0.5, 0.2, 16, 32),
+    new THREE.BoxGeometry(0.8, 0.8, 0.8),
+    new THREE.SphereGeometry(0.5, 32, 32),
+    new THREE.TetrahedronGeometry(0.7, 0),
+    new THREE.CylinderGeometry(0.35, 0.35, 0.7, 8),
+    new THREE.DodecahedronGeometry(0.6, 0),
   ];
 
   // ============ CREATE OBJECTS ============
   const isMobile = window.innerWidth < 768;
-  const NUM = isMobile ? 15 : 28;
+  const NUM = isMobile ? 8 : 15;
   const objects: SceneObject[] = [];
 
   for (let i = 0; i < NUM; i++) {
@@ -89,7 +84,7 @@ export function initHero3D(
     const mat = materials[i % materials.length];
     const mesh = new THREE.Mesh(geo, mat);
 
-    const spread = isMobile ? 4 : 6;
+    const spread = isMobile ? 3 : 5;
     mesh.position.set(
       (Math.random() - 0.5) * spread * 2,
       (Math.random() - 0.5) * spread,
@@ -102,7 +97,7 @@ export function initHero3D(
       Math.random() * Math.PI * 2
     );
 
-    const s = 0.5 + Math.random() * 0.7;
+    const s = 1.4 + Math.random() * 1.8;
     mesh.scale.setScalar(s);
 
     scene.add(mesh);
@@ -110,9 +105,9 @@ export function initHero3D(
     objects.push({
       mesh,
       home: new THREE.Vector3(
+        (Math.random() - 0.5) * 6,
         (Math.random() - 0.5) * 4,
-        (Math.random() - 0.5) * 3,
-        (Math.random() - 0.5) * 2
+        (Math.random() - 0.5) * 3
       ),
       vel: new THREE.Vector3(),
       rotSpeed: new THREE.Vector3(
@@ -131,12 +126,12 @@ export function initHero3D(
   let mouseActive = false;
   let idleTime = 0;
 
-  // Use parent section for mouse events so CTAs remain clickable
-  const eventTarget = canvasElement.parentElement ?? canvasElement;
+  const eventTarget = container;
 
   function onMouseMove(e: MouseEvent) {
-    mouseNDC.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouseNDC.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    const rect = container.getBoundingClientRect();
+    mouseNDC.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouseNDC.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(mouseNDC, camera);
     raycaster.ray.intersectPlane(plane, mouse3D);
     mouseActive = true;
@@ -151,8 +146,9 @@ export function initHero3D(
   function onTouchMove(e: TouchEvent) {
     const t = e.touches[0];
     if (!t) return;
-    mouseNDC.x = (t.clientX / window.innerWidth) * 2 - 1;
-    mouseNDC.y = -(t.clientY / window.innerHeight) * 2 + 1;
+    const rect = container.getBoundingClientRect();
+    mouseNDC.x = ((t.clientX - rect.left) / rect.width) * 2 - 1;
+    mouseNDC.y = -((t.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(mouseNDC, camera);
     raycaster.ray.intersectPlane(plane, mouse3D);
     mouseActive = true;
@@ -178,9 +174,6 @@ export function initHero3D(
   const DAMPING = 0.94;
   const MAX_VEL = 0.25;
 
-  // ============ GLASS OVERLAY ============
-  let currentBlur = 6;
-
   // ============ ANIMATION LOOP ============
   const clock = new THREE.Clock();
   let animationId = 0;
@@ -196,13 +189,6 @@ export function initHero3D(
       idleTime += dt;
       if (idleTime > 1.5) mouseActive = false;
     }
-
-    // Blur
-    const targetBlur = mouseActive ? 1 : 8;
-    currentBlur += (targetBlur - currentBlur) * 0.04;
-    overlayElement.style.backdropFilter = `blur(${currentBlur}px)`;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (overlayElement.style as any).webkitBackdropFilter = `blur(${currentBlur}px)`;
 
     // Update objects
     const toHome = new THREE.Vector3();
@@ -250,9 +236,9 @@ export function initHero3D(
 
   // ============ RESIZE ============
   function onResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   }
 
@@ -265,7 +251,10 @@ export function initHero3D(
     window.removeEventListener("resize", onResize);
     eventTarget.removeEventListener("mousemove", onMouseMove as EventListener);
     eventTarget.removeEventListener("mouseleave", onMouseLeave);
-    eventTarget.removeEventListener("touchmove", onTouchMove as EventListener);
+    eventTarget.removeEventListener(
+      "touchmove",
+      onTouchMove as EventListener
+    );
     eventTarget.removeEventListener("touchend", onTouchEnd);
 
     scene.traverse((obj) => {
