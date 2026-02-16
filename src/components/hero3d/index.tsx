@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import HeroOverlay from "./HeroOverlay";
-import { COLORS, MOBILE_BREAKPOINT } from "./constants";
+import { Check, MessageCircle } from "lucide-react";
+import { siteContent } from "@/lib/content";
 
 export default function Hero3D() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const chaosRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const glassOverlayRef = useRef<HTMLDivElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+
+  const { hero, business } = siteContent;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -18,70 +17,57 @@ export default function Hero3D() {
       return;
     }
 
-    const section = sectionRef.current;
-    const viewport = viewportRef.current;
-    const chaosEl = chaosRef.current;
-    const titleEl = titleRef.current;
-    const ctaEl = ctaRef.current;
-    if (!section || !viewport || !chaosEl || !titleEl || !ctaEl) return;
+    const container = canvasContainerRef.current;
+    const overlay = glassOverlayRef.current;
+    if (!container || !overlay) return;
 
     let disposed = false;
     let rafId: number;
 
-    // Dynamic imports to avoid SSR
     async function init() {
-      const [
-        { SceneManager },
-        { PhysicsWorld },
-        { createObjects },
-        { MouseInteraction },
-        { ScrollAnimator },
-      ] = await Promise.all([
-        import("./SceneManager"),
-        import("./PhysicsWorld"),
-        import("./ObjectFactory"),
-        import("./MouseInteraction"),
-        import("./ScrollAnimator"),
-      ]);
+      const [{ SceneManager }, { createGlassObjects }, { PhysicsController }] =
+        await Promise.all([
+          import("./SceneManager"),
+          import("./GlassObjects"),
+          import("./Physics"),
+        ]);
 
       if (disposed) return;
 
-      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-
-      // Initialize systems
-      const scene = new SceneManager(viewport!);
-      const physics = new PhysicsWorld();
-      createObjects(scene.scene, physics, isMobile);
-      const mouse = new MouseInteraction(
-        scene.renderer.domElement,
+      const scene = new SceneManager(container!);
+      const objects = createGlassObjects(scene.scene);
+      const physics = new PhysicsController(
         scene.camera,
-        physics
+        scene.renderer.domElement
       );
-      const scroll = new ScrollAnimator(
-        section!,
-        physics,
-        mouse,
-        chaosEl!,
-        titleEl!,
-        ctaEl!
-      );
+      physics.objects = objects;
 
-      // Render loop
+      let lastTime = performance.now();
+
       function loop() {
         if (disposed) return;
         rafId = requestAnimationFrame(loop);
+
         if (!scene.isVisible) return;
-        physics.step();
+
+        const now = performance.now();
+        const dt = Math.min((now - lastTime) / 1000, 0.05); // cap dt
+        lastTime = now;
+
+        physics.update(dt);
         scene.render();
+
+        // Update glass overlay blur
+        const blurVal = `blur(${physics.blurAmount}px)`;
+        overlay!.style.backdropFilter = blurVal;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (overlay!.style as any).webkitBackdropFilter = blurVal;
       }
       loop();
 
-      // Cleanup
       return () => {
         disposed = true;
         cancelAnimationFrame(rafId);
-        scroll.dispose();
-        mouse.dispose();
         physics.dispose();
         scene.dispose();
       };
@@ -102,47 +88,105 @@ export default function Hero3D() {
     };
   }, []);
 
-  // Reduced motion fallback
+  // Reduced motion fallback — static text only
   if (reducedMotion) {
     return (
-      <section id="hero" className="relative min-h-screen flex items-center justify-center" style={{ background: "#0A0A0F" }}>
-        <div className="text-center px-6">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold" style={{ color: "#EDEDF0" }}>
-            בהירות בעסק.
+      <section id="hero" className="relative min-h-screen flex items-center pt-20">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
+          <h1
+            style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
+            className="font-bold leading-tight"
+          >
+            {hero.title}
+            <br />
+            <span className="text-[#3848FE]">{hero.titleHighlight}</span>
           </h1>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mt-2" style={{ color: "#4A56D0" }}>
-            שקט בניהול.
-          </h1>
-          <p className="mt-6 text-base md:text-lg max-w-md mx-auto whitespace-pre-line" style={{ color: "#EDEDF0", opacity: 0.7 }}>
-            עושה סדר בכספים, בתהליכים ובניהול השוטף של העסק —{"\n"}כדי שתוכל/י לקבל החלטות רגועות ולצמוח בביטחון.
+          <p className="mt-6 text-lg text-[#333333] whitespace-pre-line max-w-lg">
+            {hero.description}
           </p>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <a
+              href={`https://wa.me/${business.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300"
+            >
+              <MessageCircle className="w-5 h-5" />
+              {hero.cta1}
+            </a>
+            <a
+              href="#services"
+              className="inline-flex items-center px-8 py-3.5 border-[1.5px] border-[#3848FE] text-[#3848FE] hover:bg-[rgba(56,72,254,0.08)] font-medium rounded-full transition-colors duration-300"
+            >
+              {hero.cta2}
+            </a>
+          </div>
         </div>
       </section>
     );
   }
 
   return (
-    <section ref={sectionRef} id="hero" style={{ height: "200vh", position: "relative" }}>
+    <section id="hero" className="relative h-screen overflow-hidden pt-20">
+      {/* z-1: Three.js transparent canvas */}
       <div
-        className="sticky top-0 flex items-center justify-center overflow-hidden"
-        style={{ height: "100vh", background: COLORS.pageBackground }}
-      >
-        {/* 3D Viewport */}
-        <div
-          ref={viewportRef}
-          className="relative w-full h-full overflow-hidden"
-          style={{
-            margin: "16px",
-            borderRadius: "16px",
-            background: `#${COLORS.background.toString(16).padStart(6, "0")}`,
-            maxWidth: "calc(100vw - 32px)",
-            maxHeight: "calc(100vh - 32px)",
-          }}
-        >
-          {/* Canvas will be appended here by SceneManager */}
+        ref={canvasContainerRef}
+        className="absolute inset-0 z-[1]"
+      />
 
-          {/* DOM Overlays */}
-          <HeroOverlay chaosRef={chaosRef} titleRef={titleRef} ctaRef={ctaRef} />
+      {/* z-2: Glass overlay — backdrop-filter blur */}
+      <div
+        ref={glassOverlayRef}
+        className="absolute inset-0 z-[2] pointer-events-none"
+        style={{ backdropFilter: "blur(0px)", WebkitBackdropFilter: "blur(0px)" }}
+      />
+
+      {/* z-3: Hero text content */}
+      <div className="relative z-[3] h-full flex items-center">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 w-full">
+          <div className="max-w-2xl">
+            <h1
+              style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
+              className="font-bold leading-tight"
+            >
+              {hero.title}
+              <br />
+              <span className="text-[#3848FE]">{hero.titleHighlight}</span>
+            </h1>
+
+            <p className="mt-6 text-lg text-[#333333] whitespace-pre-line max-w-lg">
+              {hero.description}
+            </p>
+
+            {/* CTAs */}
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <a
+                href={`https://wa.me/${business.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300"
+              >
+                <MessageCircle className="w-5 h-5" />
+                {hero.cta1}
+              </a>
+              <a
+                href="#services"
+                className="inline-flex items-center px-8 py-3.5 border-[1.5px] border-[#3848FE] text-[#3848FE] hover:bg-[rgba(56,72,254,0.08)] font-medium rounded-full transition-colors duration-300"
+              >
+                {hero.cta2}
+              </a>
+            </div>
+
+            {/* Checkmarks */}
+            <div className="mt-8 flex flex-wrap gap-6">
+              {hero.stats.map((stat, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-[#3848FE]" strokeWidth={2.5} />
+                  <span className="text-sm text-[#333333]">{stat.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { COLORS, CAMERA } from "./constants";
+import { CAMERA } from "./constants";
 
 export class SceneManager {
   scene: THREE.Scene;
@@ -14,9 +14,9 @@ export class SceneManager {
   constructor(container: HTMLDivElement) {
     this.container = container;
 
-    // Scene
+    // Scene — transparent, no background
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(COLORS.background);
+    this.scene.background = null;
 
     // Camera
     const { width, height } = container.getBoundingClientRect();
@@ -29,18 +29,17 @@ export class SceneManager {
     this.camera.position.set(...CAMERA.position);
     this.camera.lookAt(...CAMERA.lookAt);
 
-    // Renderer
+    // Renderer — transparent canvas
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
-      alpha: false,
+      alpha: true,
       powerPreference: "high-performance",
     });
+    this.renderer.setClearColor(0x000000, 0);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.setSize(width, height);
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    // Canvas CSS — absolute-fill so it layers under overlays
+    // Canvas CSS — absolute-fill
     const canvas = this.renderer.domElement;
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
@@ -49,25 +48,18 @@ export class SceneManager {
     canvas.style.height = "100%";
     container.prepend(canvas);
 
-    // Lights
-    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    // Lights — simple setup, no shadows
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
     this.scene.add(ambient);
 
-    const dir = new THREE.DirectionalLight(0xffffff, 0.9);
-    dir.position.set(5, 10, 5);
-    dir.castShadow = true;
-    dir.shadow.mapSize.width = 1024;
-    dir.shadow.mapSize.height = 1024;
-    dir.shadow.camera.near = 0.5;
-    dir.shadow.camera.far = 30;
-    dir.shadow.camera.left = -10;
-    dir.shadow.camera.right = 10;
-    dir.shadow.camera.top = 10;
-    dir.shadow.camera.bottom = -10;
+    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+    dir.position.set(5, 8, 10);
     this.scene.add(dir);
 
-    const hemi = new THREE.HemisphereLight(0xe8e8ec, 0x2b35af, 0.3);
-    this.scene.add(hemi);
+    // Soft fill from below
+    const fill = new THREE.DirectionalLight(0xc4c8ff, 0.3);
+    fill.position.set(-3, -5, 5);
+    this.scene.add(fill);
 
     // Resize
     this.resizeObserver = new ResizeObserver(([entry]) => {
