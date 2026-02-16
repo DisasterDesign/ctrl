@@ -112,39 +112,44 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
   renderer.setSize(W, H);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // ============ CAMERA — top-down orthographic ============
+  // ============ CAMERA — slight angle for 3D depth ============
   const aspect = W / H;
-  const viewSize = 18;
+  const viewSize = 42;
   const camera = new THREE.OrthographicCamera(
     (-viewSize * aspect) / 2,
     (viewSize * aspect) / 2,
     viewSize / 2,
     -viewSize / 2,
     0.1,
-    100
+    200
   );
-  camera.position.set(0, 50, 0);
+  camera.position.set(0, 80, 12);
   camera.lookAt(0, 0, 0);
 
   // ============ SCENE ============
   const scene = new THREE.Scene();
 
   // ============ LIGHTS — off-center for 3D depth ============
-  const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.3);
   scene.add(ambient);
 
-  // Main light — slightly off-center for asymmetric highlight
-  const mainLight = new THREE.PointLight(0xffffff, 1.5, 100);
-  mainLight.position.set(3, 25, 3);
+  // Main light — offset from center for asymmetric highlight
+  const mainLight = new THREE.PointLight(0xffffff, 2.0, 100);
+  mainLight.position.set(5, 20, 5);
   scene.add(mainLight);
 
   // Fill light from opposite side
-  const fillLight = new THREE.PointLight(0xffffff, 0.4, 100);
-  fillLight.position.set(-5, 20, -5);
+  const fillLight = new THREE.PointLight(0xffffff, 0.6, 100);
+  fillLight.position.set(-6, 15, -4);
   scene.add(fillLight);
 
+  // Rim light — edge highlight for 3D pop
+  const rimLight = new THREE.PointLight(0xffffff, 0.4, 100);
+  rimLight.position.set(0, 10, -8);
+  scene.add(rimLight);
+
   // ============ BILLIARD BALLS ============
-  const BALL_RADIUS = 0.9;
+  const BALL_RADIUS = 2.2;
   const geometry = new THREE.SphereGeometry(BALL_RADIUS, 64, 64);
 
   // Triangle rack positions (5 rows: 1+2+3+4+5 = 15)
@@ -168,8 +173,8 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
     const texture = createBallTexture(ballData);
     const material = new THREE.MeshStandardMaterial({
       map: texture,
-      roughness: 0.12,
-      metalness: 0.05,
+      roughness: 0.05,
+      metalness: 0.15,
       transparent: false,
     });
 
@@ -177,7 +182,7 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
 
     // Start off-screen scattered
     const angle = Math.random() * Math.PI * 2;
-    const dist = 20 + Math.random() * 10;
+    const dist = 35 + Math.random() * 15;
     mesh.position.set(Math.cos(angle) * dist, 0, Math.sin(angle) * dist);
 
     scene.add(mesh);
@@ -194,8 +199,8 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
   // ============ PHYSICS — slow & dreamy ============
   const ATTRACT_FORCE = 0.002;
   const DAMPING = 0.992;
-  const MOUSE_REPEL = 1.2;
-  const MOUSE_RADIUS = 3.5;
+  const MOUSE_REPEL = 3.0;
+  const MOUSE_RADIUS = 8.0;
   const SETTLE_THRESHOLD = 0.005;
   const COLLISION_RESPONSE = 0.8;
   const MAX_SPEED = 0.06;
