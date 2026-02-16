@@ -1,4 +1,4 @@
-import Hero from "@/components/Hero";
+import Hero3D from "@/components/hero3d";
 import PainPoints from "@/components/PainPoints";
 import Results from "@/components/Results";
 import Services from "@/components/Services";
@@ -12,7 +12,7 @@ import CTASection from "@/components/CTASection";
 export default function Home() {
   return (
     <>
-      <Hero />
+      <Hero3D />
       <PainPoints />
       <Results />
       <Services />
