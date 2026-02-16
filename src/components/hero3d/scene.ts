@@ -25,21 +25,21 @@ interface BallObj {
    ═══════════════════════════════════════════════ */
 
 const BALLS: BallDef[] = [
-  { n: 1,  c: "#3848FE", t: "ניהול כספים",    s: false },
-  { n: 2,  c: "#1a1a2e", t: "משכורות",        s: false },
-  { n: 3,  c: "#3848FE", t: "תזרים מזומנים",  s: false },
-  { n: 4,  c: "#1a1a2e", t: "חשבוניות",       s: false },
+  { n: 1,  c: "#000000", t: "ניהול כספים",    s: false },
+  { n: 2,  c: "#FFFFFF", t: "משכורות",        s: false },
+  { n: 3,  c: "#000000", t: "תזרים מזומנים",  s: false },
+  { n: 4,  c: "#FFFFFF", t: "חשבוניות",       s: false },
   { n: 5,  c: "#3848FE", t: "תקציב שנתי",    s: false },
-  { n: 6,  c: "#1a1a2e", t: "דוחות כספיים",   s: false },
-  { n: 7,  c: "#3848FE", t: "גבייה",         s: false },
-  { n: 8,  c: "#1a1a2e", t: "תפעול",         s: false },
-  { n: 9,  c: "#3848FE", t: "ספקים",         s: true  },
-  { n: 10, c: "#1a1a2e", t: "הנהלת חשבונות", s: true  },
-  { n: 11, c: "#3848FE", t: 'מע"מ',          s: true  },
-  { n: 12, c: "#1a1a2e", t: "ביטוחים",       s: true  },
-  { n: 13, c: "#3848FE", t: "חוזים",         s: true  },
-  { n: 14, c: "#1a1a2e", t: "הסכמי שכר",     s: true  },
-  { n: 15, c: "#3848FE", t: "תכנון פיננסי",  s: true  },
+  { n: 6,  c: "#000000", t: "דוחות כספיים",   s: false },
+  { n: 7,  c: "#FFFFFF", t: "גבייה",         s: false },
+  { n: 8,  c: "#000000", t: "תפעול",         s: false },
+  { n: 9,  c: "#FFFFFF", t: "ספקים",         s: false },
+  { n: 10, c: "#3848FE", t: "הנהלת חשבונות", s: false },
+  { n: 11, c: "#000000", t: 'מע"מ',          s: false },
+  { n: 12, c: "#FFFFFF", t: "ביטוחים",       s: false },
+  { n: 13, c: "#000000", t: "חוזים",         s: false },
+  { n: 14, c: "#FFFFFF", t: "הסכמי שכר",     s: false },
+  { n: 15, c: "#3848FE", t: "תכנון פיננסי",  s: false },
 ];
 
 /* ═══════════════════════════════════════════════
@@ -122,39 +122,17 @@ function makeBallMap(ball: BallDef): THREE.CanvasTexture {
   cv.width = cv.height = S;
   const ctx = cv.getContext("2d")!;
 
-  if (!ball.s) {
-    // SOLID — full color
-    ctx.fillStyle = ball.c;
-    ctx.fillRect(0, 0, S, S);
-  } else {
-    // STRIPE — white base, color band in middle
-    ctx.fillStyle = "#F0F0F0";
-    ctx.fillRect(0, 0, S, S);
-    ctx.fillStyle = ball.c;
-    ctx.fillRect(0, S * 0.22, S, S * 0.56);
-  }
+  // Solid color background — no stripe, no number
+  ctx.fillStyle = ball.c;
+  ctx.fillRect(0, 0, S, S);
 
-  // White circle for number
-  ctx.beginPath();
-  ctx.arc(S / 2, S / 2, S * 0.17, 0, Math.PI * 2);
-  ctx.fillStyle = "#FFFFFF";
-  ctx.fill();
-  // Subtle border on circle
-  ctx.strokeStyle = "rgba(0,0,0,0.12)";
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Number
-  ctx.fillStyle = "#111111";
-  ctx.font = `bold ${S * 0.13}px Arial, Helvetica, sans-serif`;
+  // Task text — centered
+  // Black text on white balls, white text on dark balls
+  ctx.fillStyle = ball.c === "#FFFFFF" ? "#000000" : "#FFFFFF";
+  ctx.font = `bold ${S * 0.08}px Arial, Helvetica, sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(String(ball.n), S / 2, S / 2);
-
-  // Label text below
-  ctx.fillStyle = "#FFFFFF";
-  ctx.font = `bold ${S * 0.065}px Arial, Helvetica, sans-serif`;
-  ctx.fillText(ball.t, S / 2, S * 0.82);
+  ctx.fillText(ball.t, S / 2, S / 2);
 
   const tex = new THREE.CanvasTexture(cv);
   tex.needsUpdate = true;
@@ -182,10 +160,10 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
   const scene = new THREE.Scene();
 
   /* ──── Camera ──── */
-  // PerspectiveCamera with low FOV + slight angle = near top-down with depth
+  // PerspectiveCamera — 90° top-down
   const cam = new THREE.PerspectiveCamera(28, W / H, 0.1, 500);
-  cam.position.set(0, 70, 22);
-  cam.lookAt(0, 0, -2);
+  cam.position.set(0, 160, 0);
+  cam.lookAt(0, 0, 0);
 
   /* ──── NO LIGHTS — matcap handles everything ──── */
 
@@ -193,11 +171,11 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
   const matcapTex = createMatcap();
 
   /* ──── Ball geometry ──── */
-  const RADIUS = 3.5;
+  const RADIUS = 7.0;
   const geo = new THREE.SphereGeometry(RADIUS, 64, 64);
 
   /* ──── Shadow disc ──── */
-  const shadowGeo = new THREE.CircleGeometry(RADIUS * 1.2, 32);
+  const shadowGeo = new THREE.CircleGeometry(RADIUS * 1.15, 32);
   const shadowMatBase = new THREE.MeshBasicMaterial({
     color: 0x000000,
     transparent: true,
@@ -232,16 +210,16 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
     // Shadow disc under ball
     const shadow = new THREE.Mesh(shadowGeo, shadowMatBase.clone());
     shadow.rotation.x = -Math.PI / 2;
-    shadow.position.y = -RADIUS + 0.02;
+    shadow.position.y = -RADIUS + 0.05;
 
     // Start off-screen — distributed around the edges
     const angle = (i / BALLS.length) * Math.PI * 2 + (Math.random() - 0.5) * 0.8;
-    const dist = 45 + Math.random() * 20;
+    const dist = 80 + Math.random() * 40;
     const sx = Math.cos(angle) * dist;
     const sz = Math.sin(angle) * dist;
 
     mesh.position.set(sx, 0, sz);
-    shadow.position.set(sx, -RADIUS + 0.02, sz);
+    shadow.position.set(sx, -RADIUS + 0.05, sz);
 
     // Random initial rotation so texture is varied
     mesh.rotation.set(
@@ -266,7 +244,7 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
   const ATTRACT   = 0.0025;  // gentle pull to target
   const DAMP      = 0.991;   // high = low friction, long glide
   const REPEL     = 3.5;     // mouse push force
-  const REPEL_RAD = 12.0;    // mouse influence radius
+  const REPEL_RAD = 20.0;    // mouse influence radius
   const MAX_V     = 0.07;    // max speed cap
   const SETTLE    = 0.008;   // distance threshold to "settle"
   const COL_RESP  = 0.75;    // collision elasticity
