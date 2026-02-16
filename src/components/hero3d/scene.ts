@@ -16,21 +16,21 @@ interface BallObject {
 }
 
 const BALLS: BallDef[] = [
-  { num: 1, color: "#FFD700", label: "ניהול כספים", stripe: false },
-  { num: 2, color: "#1E3A8A", label: "משכורות", stripe: false },
-  { num: 3, color: "#DC2626", label: "תזרים מזומנים", stripe: false },
-  { num: 4, color: "#7C3AED", label: "חשבוניות", stripe: false },
-  { num: 5, color: "#F97316", label: "תקציב שנתי", stripe: false },
-  { num: 6, color: "#059669", label: 'דוחות כספיים', stripe: false },
-  { num: 7, color: "#8B4513", label: "גבייה", stripe: false },
-  { num: 8, color: "#111111", label: "תפעול", stripe: false },
-  { num: 9, color: "#FFD700", label: "ספקים", stripe: true },
-  { num: 10, color: "#1E3A8A", label: "הנהלת חשבונות", stripe: true },
-  { num: 11, color: "#DC2626", label: 'מע"מ', stripe: true },
-  { num: 12, color: "#7C3AED", label: "ביטוחים", stripe: true },
-  { num: 13, color: "#F97316", label: "חוזים", stripe: true },
-  { num: 14, color: "#059669", label: "הסכמי שכר", stripe: true },
-  { num: 15, color: "#8B4513", label: "תכנון פיננסי", stripe: true },
+  { num: 1, color: "#3848FE", label: "ניהול כספים", stripe: false },
+  { num: 2, color: "#000000", label: "משכורות", stripe: false },
+  { num: 3, color: "#3848FE", label: "תזרים מזומנים", stripe: false },
+  { num: 4, color: "#000000", label: "חשבוניות", stripe: false },
+  { num: 5, color: "#3848FE", label: "תקציב שנתי", stripe: false },
+  { num: 6, color: "#000000", label: "דוחות כספיים", stripe: false },
+  { num: 7, color: "#3848FE", label: "גבייה", stripe: false },
+  { num: 8, color: "#000000", label: "תפעול", stripe: false },
+  { num: 9, color: "#3848FE", label: "ספקים", stripe: true },
+  { num: 10, color: "#000000", label: "הנהלת חשבונות", stripe: true },
+  { num: 11, color: "#3848FE", label: 'מע"מ', stripe: true },
+  { num: 12, color: "#000000", label: "ביטוחים", stripe: true },
+  { num: 13, color: "#3848FE", label: "חוזים", stripe: true },
+  { num: 14, color: "#000000", label: "הסכמי שכר", stripe: true },
+  { num: 15, color: "#3848FE", label: "תכנון פיננסי", stripe: true },
 ];
 
 function createBallTexture(ball: BallDef): THREE.CanvasTexture {
@@ -40,40 +40,57 @@ function createBallTexture(ball: BallDef): THREE.CanvasTexture {
   canvas2d.height = size;
   const ctx = canvas2d.getContext("2d")!;
 
-  // Background
-  ctx.fillStyle = "#F5F5F0";
-  ctx.fillRect(0, 0, size, size);
-
   if (!ball.stripe) {
-    // Solid ball — full color background
+    // SOLID — full color background
     ctx.fillStyle = ball.color;
     ctx.fillRect(0, 0, size, size);
+
+    // White circle for number
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size * 0.22, 0, Math.PI * 2);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fill();
+
+    // Number — black
+    ctx.fillStyle = "#000000";
+    ctx.font = `bold ${size * 0.18}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(ball.num), size / 2, size / 2);
+
+    // Label — white on color
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = `bold ${size * 0.09}px Arial, sans-serif`;
+    ctx.fillText(ball.label, size / 2, size * 0.8);
   } else {
-    // Stripe ball — color band in the middle
+    // STRIPE — white background, color band in middle
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, size, size);
+
+    // Color stripe
     const stripeTop = size * 0.28;
     const stripeBottom = size * 0.72;
     ctx.fillStyle = ball.color;
     ctx.fillRect(0, stripeTop, size, stripeBottom - stripeTop);
+
+    // White circle for number (on the stripe)
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size * 0.22, 0, Math.PI * 2);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fill();
+
+    // Number — black
+    ctx.fillStyle = "#000000";
+    ctx.font = `bold ${size * 0.18}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(ball.num), size / 2, size / 2);
+
+    // Label — white on stripe
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = `bold ${size * 0.08}px Arial, sans-serif`;
+    ctx.fillText(ball.label, size / 2, size * 0.8);
   }
-
-  // White circle for number
-  ctx.beginPath();
-  ctx.arc(size / 2, size / 2, size * 0.22, 0, Math.PI * 2);
-  ctx.fillStyle = "#FFFFFF";
-  ctx.fill();
-
-  // Number
-  ctx.fillStyle = "#000000";
-  ctx.font = `bold ${size * 0.18}px Arial`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(String(ball.num), size / 2, size / 2);
-
-  // Label text
-  ctx.fillStyle = "#FFFFFF";
-  const fontSize = ball.stripe ? size * 0.08 : size * 0.09;
-  ctx.font = `bold ${fontSize}px Arial, "Segoe UI", sans-serif`;
-  ctx.fillText(ball.label, size / 2, size * 0.78);
 
   const texture = new THREE.CanvasTexture(canvas2d);
   texture.needsUpdate = true;
@@ -97,7 +114,7 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
 
   // ============ CAMERA — top-down orthographic ============
   const aspect = W / H;
-  const viewSize = 12;
+  const viewSize = 18;
   const camera = new THREE.OrthographicCamera(
     (-viewSize * aspect) / 2,
     (viewSize * aspect) / 2,
@@ -112,23 +129,26 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
   // ============ SCENE ============
   const scene = new THREE.Scene();
 
-  // ============ LIGHTS ============
-  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  // ============ LIGHTS — off-center for 3D depth ============
+  const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+  scene.add(ambient);
 
-  const topLight = new THREE.PointLight(0xffffff, 1.2, 100);
-  topLight.position.set(0, 30, 0);
-  scene.add(topLight);
+  // Main light — slightly off-center for asymmetric highlight
+  const mainLight = new THREE.PointLight(0xffffff, 1.5, 100);
+  mainLight.position.set(3, 25, 3);
+  scene.add(mainLight);
 
-  const sideLight = new THREE.PointLight(0xffffff, 0.3, 100);
-  sideLight.position.set(10, 20, 10);
-  scene.add(sideLight);
+  // Fill light from opposite side
+  const fillLight = new THREE.PointLight(0xffffff, 0.4, 100);
+  fillLight.position.set(-5, 20, -5);
+  scene.add(fillLight);
 
   // ============ BILLIARD BALLS ============
-  const BALL_RADIUS = 0.42;
+  const BALL_RADIUS = 0.9;
   const geometry = new THREE.SphereGeometry(BALL_RADIUS, 64, 64);
 
   // Triangle rack positions (5 rows: 1+2+3+4+5 = 15)
-  const spacing = BALL_RADIUS * 2.15;
+  const spacing = BALL_RADIUS * 2.12;
   const trianglePositions: { x: number; z: number }[] = [];
   for (let row = 0; row < 5; row++) {
     const numInRow = row + 1;
@@ -148,7 +168,7 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
     const texture = createBallTexture(ballData);
     const material = new THREE.MeshStandardMaterial({
       map: texture,
-      roughness: 0.15,
+      roughness: 0.12,
       metalness: 0.05,
       transparent: false,
     });
@@ -157,7 +177,7 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
 
     // Start off-screen scattered
     const angle = Math.random() * Math.PI * 2;
-    const dist = 15 + Math.random() * 8;
+    const dist = 20 + Math.random() * 10;
     mesh.position.set(Math.cos(angle) * dist, 0, Math.sin(angle) * dist);
 
     scene.add(mesh);
@@ -171,13 +191,14 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
     });
   });
 
-  // ============ PHYSICS ============
-  const ATTRACT_FORCE = 0.008;
-  const DAMPING = 0.97;
-  const MOUSE_REPEL = 2.5;
-  const MOUSE_RADIUS = 3.0;
-  const SETTLE_THRESHOLD = 0.01;
+  // ============ PHYSICS — slow & dreamy ============
+  const ATTRACT_FORCE = 0.002;
+  const DAMPING = 0.992;
+  const MOUSE_REPEL = 1.2;
+  const MOUSE_RADIUS = 3.5;
+  const SETTLE_THRESHOLD = 0.005;
   const COLLISION_RESPONSE = 0.8;
+  const MAX_SPEED = 0.06;
 
   // ============ MOUSE ============
   const mouse2D = new THREE.Vector2(9999, 9999);
@@ -255,6 +276,12 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
 
       // Damping
       ball.vel.multiplyScalar(DAMPING);
+
+      // Clamp speed
+      const speed = ball.vel.length();
+      if (speed > MAX_SPEED) {
+        ball.vel.normalize().multiplyScalar(MAX_SPEED);
+      }
     }
 
     // Step 2: Collision detection & response
@@ -278,7 +305,7 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
           const relVel = new THREE.Vector2().subVectors(a.vel, b.vel);
           const velAlongNormal = relVel.dot(normal);
 
-          if (velAlongNormal > 0) continue; // already separating
+          if (velAlongNormal > 0) continue;
 
           const impulse = normal
             .clone()
@@ -293,9 +320,9 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
     for (const ball of balls) {
       ball.pos.add(ball.vel);
       ball.mesh.position.x = ball.pos.x;
-      ball.mesh.position.z = ball.pos.y; // pos.y -> world z
+      ball.mesh.position.z = ball.pos.y;
 
-      // Rolling effect
+      // Rolling effect — slowed down
       const speed = ball.vel.length();
       if (speed > 0.001) {
         const rollAxis = new THREE.Vector3(
@@ -303,7 +330,7 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
           0,
           ball.vel.x
         ).normalize();
-        const rollAngle = speed / ball.radius;
+        const rollAngle = (speed / ball.radius) * 0.4;
         ball.mesh.rotateOnWorldAxis(rollAxis, rollAngle);
       }
     }
