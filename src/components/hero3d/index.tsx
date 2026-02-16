@@ -144,8 +144,8 @@ export default function Hero3D() {
         className="relative w-full overflow-hidden"
         style={{
           maxWidth: 1400,
-          height: "50vh",
-          minHeight: 350,
+          height: "55vh",
+          minHeight: 400,
           background: "#000000",
           borderRadius: 24,
         }}
