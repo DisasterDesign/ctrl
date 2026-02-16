@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 interface BallDef {
   n: number;
@@ -39,31 +40,26 @@ function makeTex(ball: BallDef): THREE.CanvasTexture {
   const x = cv.getContext("2d")!;
 
   if (!ball.s) {
-    // SOLID — full color background
     x.fillStyle = ball.c;
     x.fillRect(0, 0, S, S);
   } else {
-    // STRIPE — white bg with color band
     x.fillStyle = "#FFFFFF";
     x.fillRect(0, 0, S, S);
     x.fillStyle = ball.c;
     x.fillRect(0, S * 0.28, S, S * 0.44);
   }
 
-  // White circle for number
   x.beginPath();
   x.arc(S / 2, S / 2, S * 0.2, 0, Math.PI * 2);
   x.fillStyle = "#FFFFFF";
   x.fill();
 
-  // Number
   x.fillStyle = "#000000";
   x.font = `bold ${S * 0.16}px Arial`;
   x.textAlign = "center";
   x.textBaseline = "middle";
   x.fillText(String(ball.n), S / 2, S / 2);
 
-  // Label text
   x.fillStyle = "#FFFFFF";
   x.font = `bold ${S * 0.08}px Arial, sans-serif`;
   x.fillText(ball.t, S / 2, S * 0.82);
@@ -86,49 +82,50 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
   renderer.setClearColor(0x000000, 1);
   renderer.setSize(W, H);
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  // CRITICAL: tone mapping for realistic lighting & specular highlights
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.2;
 
   const scene = new THREE.Scene();
 
-  // ──────────────── CAMERA — slight angle for depth ────────────────
-  const aspect = W / H;
-  const vSize = 42;
-  const cam = new THREE.OrthographicCamera(
-    (-vSize * aspect) / 2,
-    (vSize * aspect) / 2,
-    vSize / 2,
-    -vSize / 2,
-    0.1,
-    200
-  );
-  cam.position.set(0, 80, 14); // slight Z offset = ~80° angle
-  cam.lookAt(0, 0, 0);
+  // ──────────────── ENVIRONMENT MAP (critical for glossy 3D look) ────────────────
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  pmremGenerator.compileEquirectangularShader();
+  const envMap = pmremGenerator.fromScene(new RoomEnvironment()).texture;
+  scene.environment = envMap;
+  pmremGenerator.dispose();
 
-  // ──────────────── LIGHTS (CRITICAL FOR 3D LOOK) ────────────────
+  // ──────────────── CAMERA — PerspectiveCamera for depth ────────────────
+  const cam = new THREE.PerspectiveCamera(35, W / H, 0.1, 500);
+  cam.position.set(0, 55, 30);
+  cam.lookAt(0, 0, -2);
 
-  // Ambient — weak, just prevents total black
+  // ──────────────── LIGHTS ────────────────
   scene.add(new THREE.AmbientLight(0xffffff, 0.25));
 
-  // Key light — offset from center! Creates the specular highlight
   const key = new THREE.PointLight(0xffffff, 2.5, 200);
   key.position.set(8, 40, 8);
   scene.add(key);
 
-  // Fill light — softer, opposite side
   const fill = new THREE.PointLight(0xffffff, 1.0, 200);
   fill.position.set(-10, 30, -6);
   scene.add(fill);
 
-  // Rim/back light — adds edge definition
   const rim = new THREE.PointLight(0xffffff, 0.6, 200);
   rim.position.set(0, 20, -15);
   scene.add(rim);
 
   // ──────────────── CREATE MESHES ────────────────
-  const RADIUS = 2.2;
+  const RADIUS = 3.2;
   const geo = new THREE.SphereGeometry(RADIUS, 64, 64);
+
+  // Shadow disc geometry (shared)
+  const shadowGeo = new THREE.CircleGeometry(RADIUS * 1.1, 32);
+  const shadowMat = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    opacity: 0.3,
+    depthWrite: false,
+  });
 
   // Triangle target positions (5 rows, 1+2+3+4+5 = 15)
   const targets: { x: number; z: number }[] = [];
@@ -145,19 +142,25 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
   const balls: BallObj[] = [];
 
   BALLS.forEach((bd, i) => {
-    // CRITICAL: MeshStandardMaterial — NOT MeshBasicMaterial
     const mat = new THREE.MeshStandardMaterial({
       map: makeTex(bd),
-      roughness: 0.05, // very glossy = visible specular highlight
-      metalness: 0.15, // slight metallic = stronger reflection
+      roughness: 0.08,
+      metalness: 0.25,
+      envMapIntensity: 1.5,
       transparent: false,
     });
 
     const mesh = new THREE.Mesh(geo, mat);
 
+    // Shadow disc — child of ball, sits on floor
+    const shadow = new THREE.Mesh(shadowGeo, shadowMat);
+    shadow.rotation.x = -Math.PI / 2;
+    shadow.position.y = -RADIUS - 0.01;
+    mesh.add(shadow);
+
     // Start off-screen
     const ang = Math.random() * Math.PI * 2;
-    const dist = 35 + Math.random() * 15;
+    const dist = 45 + Math.random() * 20;
     mesh.position.set(Math.cos(ang) * dist, 0, Math.sin(ang) * dist);
 
     scene.add(mesh);
@@ -174,21 +177,29 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
   const ATTRACT = 0.002;
   const DAMP = 0.992;
   const M_REPEL = 3.0;
-  const M_RAD = 8.0;
+  const M_RAD = 10.0;
   const MAX_V = 0.06;
   const SETTLE = 0.005;
   const COL_RESP = 0.8;
   const DIAM = RADIUS * 2;
 
-  // ──────────────── MOUSE ────────────────
+  // ──────────────── MOUSE (Raycaster-based for PerspectiveCamera) ────────────────
   const mouse = new THREE.Vector2(9999, 9999);
   let mActive = false;
+  const raycaster = new THREE.Raycaster();
+  const mouseNDC = new THREE.Vector2();
+  const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  const mouse3DPoint = new THREE.Vector3();
 
   function onMouseMove(e: MouseEvent) {
     const r = box.getBoundingClientRect();
-    const nx = ((e.clientX - r.left) / r.width) * 2 - 1;
-    const ny = -((e.clientY - r.top) / r.height) * 2 + 1;
-    mouse.set((nx * vSize * aspect) / 2, (ny * vSize) / 2);
+    mouseNDC.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    mouseNDC.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(mouseNDC, cam);
+    raycaster.ray.intersectPlane(groundPlane, mouse3DPoint);
+    if (mouse3DPoint) {
+      mouse.set(mouse3DPoint.x, mouse3DPoint.z);
+    }
     mActive = true;
   }
 
@@ -201,10 +212,13 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
     const t = e.touches[0];
     if (!t) return;
     const r = box.getBoundingClientRect();
-    mouse.set(
-      (((t.clientX - r.left) / r.width) * 2 - 1) * ((vSize * aspect) / 2),
-      (-((t.clientY - r.top) / r.height) * 2 + 1) * (vSize / 2)
-    );
+    mouseNDC.x = ((t.clientX - r.left) / r.width) * 2 - 1;
+    mouseNDC.y = -((t.clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(mouseNDC, cam);
+    raycaster.ray.intersectPlane(groundPlane, mouse3DPoint);
+    if (mouse3DPoint) {
+      mouse.set(mouse3DPoint.x, mouse3DPoint.z);
+    }
     mActive = true;
   }
 
@@ -229,7 +243,6 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
     animId = requestAnimationFrame(tick);
 
     for (const b of balls) {
-      // Attract to target
       const toT = new THREE.Vector2().subVectors(b.target, b.pos);
       const d = toT.length();
       if (d > SETTLE) {
@@ -237,7 +250,6 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
         b.vel.add(toT);
       }
 
-      // Mouse repel
       if (mActive) {
         const fromM = new THREE.Vector2().subVectors(b.pos, mouse);
         const md = fromM.length();
@@ -252,7 +264,6 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
       if (spd > MAX_V) b.vel.multiplyScalar(MAX_V / spd);
     }
 
-    // Collisions
     for (let i = 0; i < balls.length; i++) {
       for (let j = i + 1; j < balls.length; j++) {
         const a = balls[i],
@@ -275,7 +286,6 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
       }
     }
 
-    // Update positions + rolling
     for (const b of balls) {
       b.pos.add(b.vel);
       b.mesh.position.x = b.pos.x;
@@ -296,11 +306,7 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
   function onResize() {
     W = box.clientWidth;
     H = box.clientHeight;
-    const a = W / H;
-    cam.left = (-vSize * a) / 2;
-    cam.right = (vSize * a) / 2;
-    cam.top = vSize / 2;
-    cam.bottom = -vSize / 2;
+    cam.aspect = W / H;
     cam.updateProjectionMatrix();
     renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -317,6 +323,8 @@ export function initHero3D(canvasEl: HTMLCanvasElement): () => void {
     canvasEl.removeEventListener("mouseleave", onMouseLeave);
     canvasEl.removeEventListener("touchmove", onTouchMove as EventListener);
     canvasEl.removeEventListener("touchend", onTouchEnd);
+
+    envMap.dispose();
 
     scene.traverse((obj) => {
       if (obj instanceof THREE.Mesh) {
