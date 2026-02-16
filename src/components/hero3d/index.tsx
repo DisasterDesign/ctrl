@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, MessageCircle } from "lucide-react";
 import { siteContent } from "@/lib/content";
 
 export default function Hero3D() {
-  const canvasContainerRef = useRef<HTMLDivElement>(null);
-  const glassOverlayRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
-  const { hero, business } = siteContent;
+  const { hero } = siteContent;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -17,66 +17,17 @@ export default function Hero3D() {
       return;
     }
 
-    const container = canvasContainerRef.current;
-    const overlay = glassOverlayRef.current;
-    if (!container || !overlay) return;
+    const canvas = canvasRef.current;
+    const overlay = overlayRef.current;
+    if (!canvas || !overlay) return;
 
     let disposed = false;
-    let rafId: number;
-
-    async function init() {
-      const [{ SceneManager }, { createGlassObjects }, { PhysicsController }] =
-        await Promise.all([
-          import("./SceneManager"),
-          import("./GlassObjects"),
-          import("./Physics"),
-        ]);
-
-      if (disposed) return;
-
-      const scene = new SceneManager(container!);
-      const objects = createGlassObjects(scene.scene);
-      const physics = new PhysicsController(
-        scene.camera,
-        scene.renderer.domElement
-      );
-      physics.objects = objects;
-
-      let lastTime = performance.now();
-
-      function loop() {
-        if (disposed) return;
-        rafId = requestAnimationFrame(loop);
-
-        if (!scene.isVisible) return;
-
-        const now = performance.now();
-        const dt = Math.min((now - lastTime) / 1000, 0.05); // cap dt
-        lastTime = now;
-
-        physics.update(dt);
-        scene.render();
-
-        // Update glass overlay blur
-        const blurVal = `blur(${physics.blurAmount}px)`;
-        overlay!.style.backdropFilter = blurVal;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (overlay!.style as any).webkitBackdropFilter = blurVal;
-      }
-      loop();
-
-      return () => {
-        disposed = true;
-        cancelAnimationFrame(rafId);
-        physics.dispose();
-        scene.dispose();
-      };
-    }
-
     let cleanup: (() => void) | undefined;
-    init()
-      .then((fn) => {
-        cleanup = fn;
+
+    import("./scene")
+      .then(({ initHero3D }) => {
+        if (disposed) return;
+        cleanup = initHero3D(canvas, overlay);
       })
       .catch((err) => {
         console.error("[Hero3D] init failed:", err);
@@ -88,35 +39,40 @@ export default function Hero3D() {
     };
   }, []);
 
-  // Reduced motion fallback — static text only
   if (reducedMotion) {
     return (
-      <section id="hero" className="relative min-h-screen flex items-center pt-20">
-        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
+      <section
+        id="hero"
+        className="relative flex items-center justify-center text-center"
+        style={{ height: "100vh", background: "#F0F1FB", padding: "0 24px" }}
+      >
+        <div>
+          <p className="text-sm font-medium text-[#3848FE] mb-4 tracking-wide">
+            {hero.badge}
+          </p>
           <h1
-            style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
-            className="font-bold leading-tight"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+            className="font-bold leading-[1.15] mb-6"
           >
             {hero.title}
             <br />
-            <span className="text-[#3848FE]">{hero.titleHighlight}</span>
+            {hero.titleHighlight}
           </h1>
-          <p className="mt-6 text-lg text-[#333333] whitespace-pre-line max-w-lg">
+          <p className="text-[#333] max-w-[600px] mx-auto leading-relaxed mb-10 whitespace-pre-line"
+            style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)" }}
+          >
             {hero.description}
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="flex gap-4 flex-wrap justify-center">
             <a
-              href={`https://wa.me/${business.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300"
+              href="#contact"
+              className="bg-[#3848FE] text-white px-8 py-3.5 rounded-full font-medium hover:bg-[#2B35CC] transition-colors"
             >
-              <MessageCircle className="w-5 h-5" />
               {hero.cta1}
             </a>
             <a
               href="#services"
-              className="inline-flex items-center px-8 py-3.5 border-[1.5px] border-[#3848FE] text-[#3848FE] hover:bg-[rgba(56,72,254,0.08)] font-medium rounded-full transition-colors duration-300"
+              className="border-[1.5px] border-[#3848FE] text-[#3848FE] px-8 py-3.5 rounded-full font-medium hover:bg-[rgba(56,72,254,0.08)] transition-colors"
             >
               {hero.cta2}
             </a>
@@ -127,68 +83,66 @@ export default function Hero3D() {
   }
 
   return (
-    <section id="hero" className="relative h-screen overflow-hidden pt-20">
-      {/* z-1: Three.js transparent canvas */}
+    <section
+      ref={sectionRef}
+      id="hero"
+      className="relative overflow-hidden"
+      style={{ height: "100vh", background: "#F0F1FB" }}
+    >
+      {/* Layer 1 (z-1): Text — behind everything */}
       <div
-        ref={canvasContainerRef}
-        className="absolute inset-0 z-[1]"
-      />
-
-      {/* z-2: Glass overlay — backdrop-filter blur */}
-      <div
-        ref={glassOverlayRef}
-        className="absolute inset-0 z-[2] pointer-events-none"
-        style={{ backdropFilter: "blur(0px)", WebkitBackdropFilter: "blur(0px)" }}
-      />
-
-      {/* z-3: Hero text content */}
-      <div className="relative z-[3] h-full flex items-center">
-        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 w-full">
-          <div className="max-w-2xl">
-            <h1
-              style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
-              className="font-bold leading-tight"
-            >
-              {hero.title}
-              <br />
-              <span className="text-[#3848FE]">{hero.titleHighlight}</span>
-            </h1>
-
-            <p className="mt-6 text-lg text-[#333333] whitespace-pre-line max-w-lg">
-              {hero.description}
-            </p>
-
-            {/* CTAs */}
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href={`https://wa.me/${business.whatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300"
-              >
-                <MessageCircle className="w-5 h-5" />
-                {hero.cta1}
-              </a>
-              <a
-                href="#services"
-                className="inline-flex items-center px-8 py-3.5 border-[1.5px] border-[#3848FE] text-[#3848FE] hover:bg-[rgba(56,72,254,0.08)] font-medium rounded-full transition-colors duration-300"
-              >
-                {hero.cta2}
-              </a>
-            </div>
-
-            {/* Checkmarks */}
-            <div className="mt-8 flex flex-wrap gap-6">
-              {hero.stats.map((stat, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-[#3848FE]" strokeWidth={2.5} />
-                  <span className="text-sm text-[#333333]">{stat.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        className="absolute inset-0 z-[1] flex flex-col items-center justify-center text-center"
+        style={{ padding: "0 24px" }}
+      >
+        <p className="text-sm font-medium text-[#3848FE] mb-4 tracking-wide">
+          {hero.badge}
+        </p>
+        <h1
+          style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+          className="font-bold leading-[1.15] mb-6"
+        >
+          {hero.title}
+          <br />
+          {hero.titleHighlight}
+        </h1>
+        <p
+          className="text-[#333] max-w-[600px] leading-relaxed mb-10 whitespace-pre-line"
+          style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)" }}
+        >
+          {hero.description}
+        </p>
+        <div className="flex gap-4 flex-wrap justify-center relative z-[10]">
+          <a
+            href="#contact"
+            className="bg-[#3848FE] text-white px-8 py-3.5 rounded-full font-medium hover:bg-[#2B35CC] transition-colors"
+          >
+            {hero.cta1}
+          </a>
+          <a
+            href="#services"
+            className="border-[1.5px] border-[#3848FE] text-[#3848FE] px-8 py-3.5 rounded-full font-medium hover:bg-[rgba(56,72,254,0.08)] transition-colors"
+          >
+            {hero.cta2}
+          </a>
         </div>
       </div>
+
+      {/* Layer 2 (z-2): Frosted glass overlay */}
+      <div
+        ref={overlayRef}
+        className="absolute inset-0 z-[2] pointer-events-none"
+        style={{
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
+          background: "rgba(240, 241, 251, 0.12)",
+        }}
+      />
+
+      {/* Layer 3 (z-3): Three.js Canvas — on top, pointer-events none so CTAs work */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 z-[3] w-full h-full pointer-events-none"
+      />
     </section>
   );
 }
