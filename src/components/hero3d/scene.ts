@@ -54,35 +54,25 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
   }
 
   const materials = [
-    solidMat(0x3848fe), // blue primary
-    solidMat(0x3848fe), // blue primary
-    solidMat(0x2b35cc), // dark blue
-    solidMat(0x6b7cff), // light blue
-    solidMat(0xffffff), // white
-    solidMat(0xddddee), // light gray
+    solidMat(0x3848fe),
+    solidMat(0x3848fe),
+    solidMat(0x2b35cc),
+    solidMat(0x6b7cff),
+    solidMat(0xffffff),
+    solidMat(0xddddee),
   ];
 
-  // ============ GEOMETRIES ============
-  const geometries: THREE.BufferGeometry[] = [
-    new THREE.IcosahedronGeometry(0.7, 0),
-    new THREE.OctahedronGeometry(0.65, 0),
-    new THREE.TorusGeometry(0.5, 0.2, 16, 32),
-    new THREE.BoxGeometry(0.8, 0.8, 0.8),
-    new THREE.SphereGeometry(0.5, 32, 32),
-    new THREE.TetrahedronGeometry(0.7, 0),
-    new THREE.CylinderGeometry(0.35, 0.35, 0.7, 8),
-    new THREE.DodecahedronGeometry(0.6, 0),
-  ];
+  // ============ GEOMETRY — single shape ============
+  const baseGeometry = new THREE.IcosahedronGeometry(1, 1);
 
   // ============ CREATE OBJECTS ============
   const isMobile = window.innerWidth < 768;
-  const NUM = isMobile ? 8 : 15;
+  const NUM = isMobile ? 5 : 10;
   const objects: SceneObject[] = [];
 
   for (let i = 0; i < NUM; i++) {
-    const geo = geometries[i % geometries.length];
     const mat = materials[i % materials.length];
-    const mesh = new THREE.Mesh(geo, mat);
+    const mesh = new THREE.Mesh(baseGeometry, mat);
 
     const spread = isMobile ? 3 : 5;
     mesh.position.set(
@@ -97,7 +87,7 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
       Math.random() * Math.PI * 2
     );
 
-    const s = 1.4 + Math.random() * 1.8;
+    const s = 2.5 + Math.random() * 2.5;
     mesh.scale.setScalar(s);
 
     scene.add(mesh);
@@ -105,15 +95,15 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
     objects.push({
       mesh,
       home: new THREE.Vector3(
-        (Math.random() - 0.5) * 6,
-        (Math.random() - 0.5) * 4,
-        (Math.random() - 0.5) * 3
+        (Math.random() - 0.5) * 8,
+        (Math.random() - 0.5) * 5,
+        (Math.random() - 0.5) * 4
       ),
       vel: new THREE.Vector3(),
       rotSpeed: new THREE.Vector3(
-        (Math.random() - 0.5) * 0.008,
-        (Math.random() - 0.5) * 0.008,
-        (Math.random() - 0.5) * 0.008
+        (Math.random() - 0.5) * 0.003,
+        (Math.random() - 0.5) * 0.003,
+        (Math.random() - 0.5) * 0.003
       ),
     });
   }
@@ -167,12 +157,12 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
   });
   eventTarget.addEventListener("touchend", onTouchEnd);
 
-  // ============ PHYSICS CONSTANTS ============
-  const ATTRACT = 0.015;
-  const REPEL = 0.2;
-  const REPEL_RADIUS = 3.5;
-  const DAMPING = 0.94;
-  const MAX_VEL = 0.25;
+  // ============ PHYSICS CONSTANTS — soft & dreamy ============
+  const ATTRACT = 0.004;
+  const REPEL = 0.12;
+  const REPEL_RADIUS = 4.5;
+  const DAMPING = 0.985;
+  const MAX_VEL = 0.15;
 
   // ============ ANIMATION LOOP ============
   const clock = new THREE.Clock();
@@ -222,10 +212,10 @@ export function initHero3D(canvasElement: HTMLCanvasElement): () => void {
       // Apply
       pos.add(vel);
 
-      // Rotate
-      const activity = vel.length() * 3;
-      obj.mesh.rotation.x += obj.rotSpeed.x + activity * 0.01;
-      obj.mesh.rotation.y += obj.rotSpeed.y + activity * 0.01;
+      // Rotate — slow, dreamy
+      const activity = vel.length() * 1.5;
+      obj.mesh.rotation.x += obj.rotSpeed.x + activity * 0.005;
+      obj.mesh.rotation.y += obj.rotSpeed.y + activity * 0.005;
       obj.mesh.rotation.z += obj.rotSpeed.z;
     });
 
