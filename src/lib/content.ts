@@ -269,7 +269,7 @@ export const siteContent = {
       { label: "תנאי שימוש", href: "/terms" },
     ],
     copyright: "© 2025 CLARITY. כל הזכויות שמורות.",
-    madeWith: "נבנה עם ❤️ בתל אביב",
+    madeWith: "built by fuzion",
   },
 
   // Navigation

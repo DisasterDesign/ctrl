@@ -5,15 +5,15 @@ export default function Testimonials() {
   const { testimonials } = siteContent;
 
   return (
-    <section id="testimonials" className="py-20 lg:py-28">
+    <section id="testimonials" className="py-14 md:py-20 lg:py-28">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-16">
           <FadeIn>
             <p className="text-sm font-medium text-[#3848FE] mb-4">{testimonials.badge}</p>
           </FadeIn>
           <FadeIn delay={0.15}>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-6">
               {testimonials.title}
             </h2>
           </FadeIn>
@@ -25,10 +25,10 @@ export default function Testimonials() {
         </div>
 
         {/* Testimonial Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-10 md:mb-16">
           {testimonials.items.map((item, index) => (
             <FadeIn key={index} delay={0.25 + index * 0.1}>
-              <div className="bg-white rounded-2xl p-8 border border-[rgba(0,0,0,0.08)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] h-full flex flex-col">
+              <div className="bg-white rounded-2xl p-6 md:p-8 border border-[rgba(0,0,0,0.08)] shadow-[0_1px_3px_rgba(0,0,0,0.04)] h-full flex flex-col">
                 {/* Quote mark */}
                 <span className="text-5xl font-bold text-[#3848FE] leading-none mb-4">&ldquo;</span>
 
@@ -47,7 +47,7 @@ export default function Testimonials() {
 
         {/* Stats Row */}
         <FadeIn delay={0.6}>
-          <div className="flex justify-center gap-16 md:gap-24">
+          <div className="flex justify-center gap-8 md:gap-16 lg:gap-24">
             {testimonials.stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-[#3848FE] mb-2">

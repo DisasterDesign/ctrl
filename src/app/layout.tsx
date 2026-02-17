@@ -25,8 +25,8 @@ export const metadata: Metadata = {
     "סדר בעסק",
   ],
   icons: {
-    icon: "/logo.svg",
-    apple: "/logo.svg",
+    icon: "/FABICON.png",
+    apple: "/FABICON.png",
   },
   openGraph: {
     title: "CLARITY | ניהול פיננסי ותפעולי לבעלי עסקים",

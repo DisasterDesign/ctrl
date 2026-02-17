@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { Menu, X, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { siteContent } from "@/lib/content";
 
 export default function Navigation() {
@@ -14,74 +15,64 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
-        <div className="flex items-center justify-between h-20">
-          {/* Wordmark Logo */}
-          <Link href="/" className="text-2xl font-bold tracking-tight text-black">
-            CLARITY
+    <nav className="fixed top-0 left-0 right-0 z-50 nav-bar" dir="ltr">
+      <div className="w-full px-6 md:px-12 lg:px-20">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo */}
+          <Link href="/">
+            <Image src="/LOGO.png" alt="CLARITY" width={200} height={56} priority className="h-auto w-[140px] md:w-[200px]" />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {nav.links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-black hover:text-[#3848FE] transition-colors"
+          {/* Buttons */}
+          <div className="flex items-center gap-2 md:gap-3 relative">
+            {/* Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="px-4 md:px-6 py-2 md:py-2.5 rounded-full font-medium text-black text-sm md:text-base transition-all duration-300"
+              style={{ background: "#E5E6F0" }}
+            >
+              {isMenuOpen ? "סגור" : "תפריט"}
+            </button>
+
+            {/* CTA Button */}
+            <a
+              href={`https://wa.me/${business.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-black hover:bg-[#222233] text-[#f0f0f0] font-medium text-sm md:text-base rounded-full transition-colors duration-300"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span className="hidden md:inline">{nav.cta}</span>
+              <span className="md:hidden">וואטסאפ</span>
+            </a>
+
+            {/* Menu Dropdown */}
+            {isMenuOpen && (
+              <div
+                className="absolute top-full right-0 mt-3 w-48 md:w-52 rounded-2xl py-4 px-5"
+                style={{
+                  background: "rgba(255, 255, 255, 0.95)",
+                  backdropFilter: "blur(12px)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+                  animation: "menuFadeIn 0.2s ease-out",
+                }}
               >
-                {link.label}
-              </a>
-            ))}
+                <div className="flex flex-col gap-1" dir="rtl">
+                  {nav.links.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      onClick={handleNavClick}
+                      className="nav-menu-link"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-
-          {/* CTA Button */}
-          <a
-            href={`https://wa.me/${business.whatsapp}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300"
-          >
-            <MessageCircle className="w-4 h-4" />
-            {nav.cta}
-          </a>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-black"
-            aria-label="תפריט"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden py-6 border-t border-[rgba(0,0,0,0.08)]">
-            <div className="flex flex-col gap-4">
-              {nav.links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={handleNavClick}
-                  className="text-black hover:text-[#3848FE] font-medium py-2 transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href={`https://wa.me/${business.whatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300 mt-4"
-              >
-                <MessageCircle className="w-4 h-4" />
-                {nav.cta}
-              </a>
-            </div>
-          </div>
-        )}
       </div>
     </nav>
   );

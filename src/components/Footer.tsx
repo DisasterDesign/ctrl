@@ -12,8 +12,8 @@ export default function Footer() {
         <div className="border-t border-[rgba(0,0,0,0.08)]" />
       </div>
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-16">
-        <div className="grid md:grid-cols-4 gap-12">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-10 md:py-16">
+        <div className="grid md:grid-cols-4 gap-8 md:gap-12">
           {/* Brand */}
           <div className="md:col-span-1">
             <Link href="/" className="inline-block text-2xl font-bold tracking-tight text-black mb-4">
@@ -100,7 +100,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-[rgba(0,0,0,0.08)]">
+        <div className="mt-10 md:mt-16 pt-8 border-t border-[rgba(0,0,0,0.08)]">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-[#666666] text-sm">{footer.copyright}</p>
             <div className="flex items-center gap-6">
@@ -114,16 +114,13 @@ export default function Footer() {
                 </Link>
               ))}
             </div>
-            <p className="text-[#666666] text-sm">{footer.madeWith}</p>
-          </div>
-          <div className="mt-6 text-center">
             <a
               href="https://www.fuzionwebz.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-black/20 hover:text-black/50 transition-opacity duration-300"
+              className="text-[#666666] text-sm hover:text-[#3848FE] transition-colors duration-200"
             >
-              Built by Fuzion
+              {footer.madeWith}
             </a>
           </div>
         </div>

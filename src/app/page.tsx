@@ -1,5 +1,5 @@
 import Hero3D from "@/components/hero3d";
-import PainPoints from "@/components/PainPoints";
+import ScrollRevealSection from "@/components/ScrollRevealSection";
 import Results from "@/components/Results";
 import Services from "@/components/Services";
 import Process from "@/components/Process";
@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <>
       <Hero3D />
-      <PainPoints />
+      <ScrollRevealSection />
       <Results />
       <Services />
       <Process />

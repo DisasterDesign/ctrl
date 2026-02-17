@@ -28,16 +28,16 @@ export default function CTASection() {
   };
 
   return (
-    <section id="contact" className="py-20 lg:py-28">
+    <section id="contact" className="py-14 md:py-20 lg:py-28">
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* CTA Content */}
           <FadeIn>
             <div className="text-center lg:text-right">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 md:mb-6">
                 {cta.title}
               </h2>
-              <p className="text-lg text-[#333333] mb-8 whitespace-pre-line">
+              <p className="text-base md:text-lg text-[#333333] mb-6 md:mb-8 whitespace-pre-line">
                 {cta.subtitle}
               </p>
               <a
@@ -55,7 +55,7 @@ export default function CTASection() {
 
           {/* Contact Form */}
           <FadeIn delay={0.2}>
-            <div className="bg-white rounded-2xl p-8 lg:p-10 border border-[rgba(0,0,0,0.08)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+            <div className="bg-white rounded-2xl p-6 md:p-8 lg:p-10 border border-[rgba(0,0,0,0.08)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <div className="space-y-4">
                 <input
                   type="text"
