@@ -80,7 +80,7 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
   renderer.setClearColor(0x000000, 0);
   try {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 2.0;
+    renderer.toneMappingExposure = 1.0;
   } catch {
     renderer.toneMapping = THREE.LinearToneMapping;
   }
@@ -95,7 +95,7 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
   camera.lookAt(0, 0, 0);
 
   /* ──── Lighting ──── */
-  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.1));
 
   const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
   keyLight.position.set(12, 50, 10);
@@ -106,7 +106,11 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
   scene.add(fillLight);
 
   /* ──── Full-screen background plane ──── */
-  const bgMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+  const bgMat = new THREE.MeshStandardMaterial({
+    color: 0xbfbfbf,
+    roughness: 0.0,
+    metalness: 1.0,
+  });
   let bgMesh: THREE.Mesh | null = null;
 
   function updateBackground() {
