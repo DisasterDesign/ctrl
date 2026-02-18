@@ -80,7 +80,7 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
   renderer.setClearColor(0x000000, 0);
   try {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.toneMappingExposure = 2.0;
   } catch {
     renderer.toneMapping = THREE.LinearToneMapping;
   }
@@ -95,7 +95,7 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
   camera.lookAt(0, 0, 0);
 
   /* ──── Lighting ──── */
-  scene.add(new THREE.AmbientLight(0xffffff, 0.1));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
 
   const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
   keyLight.position.set(12, 50, 10);
