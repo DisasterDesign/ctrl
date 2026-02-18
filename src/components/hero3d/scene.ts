@@ -33,12 +33,12 @@ interface BallDef {
 
 const DARK = "#1a1a1a"; // true black for matte balls
 
-// 3 blue, 5 gray, 3 white, 2 dark matte, 2 random — shuffled
+// 6 blue matte, 4 gray, 3 white, 1 dark, 1 random — shuffled
 const BALL_POOL: string[] = [
-  BLUE, BLUE, BLUE,
-  BLACK, BLACK, BLACK, BLACK, BLACK,
+  BLUE, BLUE, BLUE, BLUE, BLUE, BLUE,
+  BLACK, BLACK, BLACK, BLACK,
   WHITE, WHITE, WHITE,
-  DARK, DARK,
+  DARK,
 ];
 // Fill remaining randomly
 while (BALL_POOL.length < 15) {
@@ -94,16 +94,21 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
   camera.position.set(0, CAM_HEIGHT, 0);
   camera.lookAt(0, 0, 0);
 
-  /* ──── Lighting ──── */
+  /* ──── Lighting — rotated 30° on all axes ──── */
   scene.add(new THREE.AmbientLight(0xffffff, 0.1));
 
+  const lightRig = new THREE.Group();
   const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
   keyLight.position.set(12, 50, 10);
-  scene.add(keyLight);
+  lightRig.add(keyLight);
 
   const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
   fillLight.position.set(-10, 40, -8);
-  scene.add(fillLight);
+  lightRig.add(fillLight);
+
+  const DEG30 = Math.PI / 6;
+  lightRig.rotation.set(DEG30, DEG30, DEG30);
+  scene.add(lightRig);
 
   /* ──── Full-screen background plane ──── */
   const bgMat = new THREE.MeshStandardMaterial({
@@ -145,15 +150,17 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
 
   const balls: BallState[] = [];
 
-  /* ──── Create balls — randomly matte or glass ──── */
+  /* ──── Create balls ──── */
   BALLS.forEach((bd, i) => {
     const isDark = bd.color === DARK;
     const isWhite = bd.color === WHITE;
-    const isGlass = isDark ? true : isWhite ? false : Math.random() > 0.5;
+    const isBlue = bd.color === BLUE;
+    // Blue balls are always matte, dark is glossy, others random
+    const isGlass = isDark ? true : (isWhite || isBlue) ? false : Math.random() > 0.5;
 
     const mat = new THREE.MeshPhysicalMaterial({
       color: bd.color,
-      roughness: isGlass ? 0.02 : isWhite ? 0.6 : 0.9,
+      roughness: isBlue ? 0.85 : isGlass ? 0.02 : isWhite ? 0.6 : 0.9,
       metalness: isGlass ? 0.9 : 0.0,
       clearcoat: isGlass ? 1.0 : 0,
       clearcoatRoughness: 0.01,
