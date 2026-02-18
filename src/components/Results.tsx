@@ -159,7 +159,7 @@ export default function Results() {
         ) : (
           <div
             ref={titleRef}
-            className="pt-10 md:pt-20 lg:pt-28 pb-4 md:pb-6 lg:pb-10 text-center"
+            className="pt-[3vh] md:pt-[5vh] lg:pt-[7vh] pb-[1vh] md:pb-[2vh] text-center"
             style={{ opacity: 0 }}
           >
             <h2
@@ -241,13 +241,13 @@ export default function Results() {
                   ref={(el) => {
                     milestoneRefs.current[i] = el;
                   }}
-                  className={`flex items-center gap-4 md:gap-6 mb-8 md:mb-12 ${isEven ? "flex-row" : "flex-row md:flex-row-reverse"}`}
+                  className={`flex items-center gap-4 md:gap-6 mb-[2vh] md:mb-[3vh] ${isEven ? "flex-row" : "flex-row md:flex-row-reverse"}`}
                   style={{ opacity: 0 }}
                 >
                   {/* Text card */}
                   <div className={`flex-1 ${isEven ? "md:text-right" : "md:text-left"} text-right`}>
                     <div
-                      className="rounded-2xl p-4 md:p-5 lg:p-7"
+                      className="rounded-2xl p-4 md:p-5"
                       style={{
                         background: "rgba(255,255,255,0.8)",
                         border: "1px solid rgba(56,72,254,0.08)",
@@ -309,7 +309,7 @@ export default function Results() {
         ) : (
           <div
             ref={ctaRef}
-            className="pb-6 md:pb-10 lg:pb-16 text-center"
+            className="pb-[2vh] md:pb-[3vh] text-center"
             style={{ opacity: 0 }}
           >
             <div className="mb-4 md:mb-5">
