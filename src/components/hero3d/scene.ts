@@ -106,13 +106,13 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
   fillLight.position.set(-10, 40, -8);
   lightRig.add(fillLight);
 
-  const DEG30 = Math.PI / 6;
-  lightRig.rotation.set(DEG30, DEG30, DEG30);
+  const DEG45 = Math.PI / 4;
+  lightRig.rotation.set(DEG45, DEG45, DEG45);
   scene.add(lightRig);
 
   /* ──── Full-screen background plane ──── */
   const bgMat = new THREE.MeshStandardMaterial({
-    color: 0xbfbfbf,
+    color: 0xd9d9d9,
     roughness: 0.0,
     metalness: 1.0,
   });
