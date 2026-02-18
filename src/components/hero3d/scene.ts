@@ -94,25 +94,20 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
   camera.position.set(0, CAM_HEIGHT, 0);
   camera.lookAt(0, 0, 0);
 
-  /* ──── Lighting — rotated 30° on all axes ──── */
+  /* ──── Lighting — default orientation, ready to tune ──── */
   scene.add(new THREE.AmbientLight(0xffffff, 0.1));
 
-  const lightRig = new THREE.Group();
   const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
   keyLight.position.set(12, 50, 10);
-  lightRig.add(keyLight);
+  scene.add(keyLight);
 
   const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
   fillLight.position.set(-10, 40, -8);
-  lightRig.add(fillLight);
-
-  const DEG45 = Math.PI / 4;
-  lightRig.rotation.set(DEG45, DEG45, DEG45);
-  scene.add(lightRig);
+  scene.add(fillLight);
 
   /* ──── Full-screen background plane ──── */
   const bgMat = new THREE.MeshStandardMaterial({
-    color: 0xd9d9d9,
+    color: 0xe6e6e6,
     roughness: 0.0,
     metalness: 1.0,
   });
