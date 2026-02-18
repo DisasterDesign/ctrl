@@ -45,7 +45,7 @@ export default function Hero() {
           lineHeight: 1.7,
         }}>
           עושה סדר בכספים, בתהליכים ובניהול השוטף של העסק —
-          כדי שתוכל/י לקבל החלטות רגועות ולצמוח בביטחון.
+          כדי שתוכל/י לקבל החלטות נכונות ולצמוח בביטחון.
         </p>
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
           <a href="#contact" style={{
