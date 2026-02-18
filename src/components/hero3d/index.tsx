@@ -16,6 +16,7 @@ export default function Hero3D() {
 
   return (
     <section id="hero" dir="rtl" className="flex flex-col items-center overflow-hidden h-dvh md:h-screen" style={{
+      minHeight: "100vh",
       padding: isMobile ? "70px 4vw 16px" : "80px 5vw",
       background: "#F0F1FB",
     }}>

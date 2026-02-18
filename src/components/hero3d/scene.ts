@@ -78,8 +78,12 @@ export function initScene(canvas: HTMLCanvasElement, container: HTMLElement): ()
     alpha: true,
   });
   renderer.setClearColor(0x000000, 0);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
+  try {
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+  } catch {
+    renderer.toneMapping = THREE.LinearToneMapping;
+  }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   /* ──── Scene ──── */

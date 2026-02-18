@@ -46,13 +46,17 @@ export default function Results() {
       if (!el) { iconPaths.push([]); iconLengths.push([]); continue; }
       const svgEl = el.querySelector(".milestone-icon svg");
       if (!svgEl) { iconPaths.push([]); iconLengths.push([]); continue; }
-      const paths = Array.from(svgEl.querySelectorAll("path, line, polyline, circle, rect")) as SVGElement[];
+      const paths = Array.from(svgEl.querySelectorAll("path, line, polyline")) as SVGElement[];
       const lengths: number[] = [];
       for (const p of paths) {
-        const len = (p as SVGGeometryElement).getTotalLength?.() ?? 100;
-        (p as unknown as HTMLElement).style.strokeDasharray = `${len}`;
-        (p as unknown as HTMLElement).style.strokeDashoffset = `${len}`;
-        lengths.push(len);
+        try {
+          const len = (p as SVGGeometryElement).getTotalLength?.() ?? 100;
+          (p as unknown as HTMLElement).style.strokeDasharray = `${len}`;
+          (p as unknown as HTMLElement).style.strokeDashoffset = `${len}`;
+          lengths.push(len);
+        } catch {
+          lengths.push(100);
+        }
       }
       iconPaths.push(paths);
       iconLengths.push(lengths);
@@ -77,7 +81,9 @@ export default function Results() {
       const lineEl = lineRef.current;
       if (lineEl) {
         const lineProgress = Math.min(1, progress / 0.85);
-        lineEl.style.clipPath = `inset(0 0 ${(1 - lineProgress) * 100}% 0)`;
+        const clip = `inset(0 0 ${(1 - lineProgress) * 100}% 0)`;
+        lineEl.style.clipPath = clip;
+        (lineEl.style as unknown as Record<string, string>).webkitClipPath = clip;
       }
 
       // Milestones
@@ -137,7 +143,7 @@ export default function Results() {
       style={{ minHeight: isMobile ? "auto" : "250vh", background: "#F0F1FB" }}
     >
       {/* Sticky viewport (disabled on mobile) */}
-      <div className={`${isMobile ? "py-16" : "sticky top-0 h-screen"} flex flex-col items-center overflow-hidden px-6 md:px-12 lg:px-20`}>
+      <div className={`${isMobile ? "py-16" : "sticky top-0 h-screen gpu-layer"} flex flex-col items-center overflow-hidden px-6 md:px-12 lg:px-20`}>
         {/* Title */}
         {isMobile ? (
           <FadeIn>
@@ -172,6 +178,8 @@ export default function Results() {
             <svg
               className="absolute left-1/2 top-[5%] h-[90%] -translate-x-1/2 pointer-events-none"
               width="4"
+              viewBox="0 0 4 1000"
+              preserveAspectRatio="none"
               style={{ overflow: "visible" }}
             >
               <line
@@ -179,13 +187,13 @@ export default function Results() {
                 x1="2"
                 y1="0"
                 x2="2"
-                y2="100%"
+                y2="1000"
                 stroke="#3848FE"
                 strokeWidth="2"
                 strokeDasharray="8 6"
                 strokeLinecap="round"
                 opacity="0.35"
-                style={{ clipPath: "inset(0 0 100% 0)" }}
+                style={{ clipPath: "inset(0 0 100% 0)", WebkitClipPath: "inset(0 0 100% 0)" } as React.CSSProperties}
               />
             </svg>
           )}

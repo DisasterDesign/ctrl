@@ -145,7 +145,7 @@ export default function About() {
               <FadeIn delay={0.35}>
                 <div className="aspect-square max-w-[280px] mx-auto rounded-2xl overflow-hidden">
                   <Image
-                    src="/Gemini_Generated_Image_xsl90sxsl90sxsl9.png"
+                    src="/shareet.jpg"
                     alt="שרית — CLARITY"
                     width={500}
                     height={500}
@@ -169,7 +169,7 @@ export default function About() {
       className="relative"
       style={{ minHeight: "180vh", background: "#F0F1FB" }}
     >
-      <div className="sticky top-0 h-screen flex items-center px-6 md:px-12 lg:px-20">
+      <div className="sticky top-0 h-screen flex items-center px-6 md:px-12 lg:px-20 gpu-layer">
         <div className="max-w-[1200px] mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Content */}
@@ -233,7 +233,7 @@ export default function About() {
               style={{ opacity: 0 }}
             >
               <Image
-                src="/Gemini_Generated_Image_xsl90sxsl90sxsl9.png"
+                src="/shareet.jpg"
                 alt="שרית — CLARITY"
                 width={500}
                 height={500}

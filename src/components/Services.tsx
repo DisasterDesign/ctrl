@@ -79,7 +79,7 @@ export default function Services() {
       className="relative"
       style={{ minHeight: isMobile ? "auto" : "180vh", background: "#F0F1FB" }}
     >
-      <div className={`${isMobile ? "py-16" : "sticky top-0 h-screen flex items-center"} flex flex-col items-center justify-center px-6 md:px-12 lg:px-20`}>
+      <div className={`${isMobile ? "py-16" : "sticky top-0 h-screen flex items-center gpu-layer"} flex flex-col items-center justify-center px-6 md:px-12 lg:px-20`}>
         <div className="max-w-[1200px] mx-auto w-full">
           {/* Header */}
           {isMobile ? (

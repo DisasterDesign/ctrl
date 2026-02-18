@@ -137,7 +137,9 @@ export default function Process() {
       const lineEl = lineRef.current;
       if (lineEl) {
         const lineProgress = Math.min(1, progress / 0.82);
-        lineEl.style.clipPath = `inset(0 0 0 ${(1 - lineProgress) * 100}%)`;
+        const clip = `inset(0 0 0 ${(1 - lineProgress) * 100}%)`;
+        lineEl.style.clipPath = clip;
+        (lineEl.style as unknown as Record<string, string>).webkitClipPath = clip;
       }
 
       // Steps
@@ -313,7 +315,7 @@ export default function Process() {
       style={{ minHeight: isMobile ? "auto" : "200vh", background: "#F0F1FB" }}
     >
       {/* Sticky viewport (disabled on mobile) */}
-      <div className={`${isMobile ? "py-16" : "sticky top-0 h-screen"} flex flex-col items-center justify-center px-6 md:px-12 lg:px-20 overflow-hidden`}>
+      <div className={`${isMobile ? "py-16" : "sticky top-0 h-screen gpu-layer"} flex flex-col items-center justify-center px-6 md:px-12 lg:px-20 overflow-hidden`}>
         {/* Canvas background — cube + balls */}
         <canvas
           ref={canvasRef}

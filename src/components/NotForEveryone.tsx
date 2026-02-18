@@ -154,7 +154,7 @@ export default function WhoIsThisFor() {
       className="relative"
       style={{ minHeight: "160vh", background: "#F0F1FB" }}
     >
-      <div className="sticky top-0 h-screen flex items-center px-6 md:px-12 lg:px-20">
+      <div className="sticky top-0 h-screen flex items-center px-6 md:px-12 lg:px-20 gpu-layer">
         <div className="max-w-[1200px] mx-auto w-full">
           <div className="max-w-3xl mx-auto">
             <h2

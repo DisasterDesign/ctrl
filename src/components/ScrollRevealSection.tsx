@@ -163,7 +163,9 @@ function DesktopLayout() {
           const textRange = 0.10;
           const tp = Math.max(0, Math.min(1, (progress - textStart) / textRange));
           const clipLeft = (1 - tp) * 100;
-          textEl.style.clipPath = `inset(0 0 0 ${clipLeft}%)`;
+          const clip = `inset(0 0 0 ${clipLeft}%)`;
+          textEl.style.clipPath = clip;
+          (textEl.style as unknown as Record<string, string>).webkitClipPath = clip;
           textEl.style.opacity = tp > 0 ? "1" : "0";
         }
       }
@@ -209,7 +211,9 @@ function DesktopLayout() {
         conEl.style.opacity = cp > 0 ? "1" : "0";
         const scale = 0.85 + 0.15 * eased;
         const clipLeft = (1 - eased) * 100;
-        conEl.style.clipPath = `inset(0 0 0 ${clipLeft}%)`;
+        const clip = `inset(0 0 0 ${clipLeft}%)`;
+        conEl.style.clipPath = clip;
+        (conEl.style as unknown as Record<string, string>).webkitClipPath = clip;
         conEl.style.transform = `scale(${scale})`;
       }
     }
