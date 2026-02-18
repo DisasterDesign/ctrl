@@ -19,7 +19,7 @@ export default function Navigation() {
       <div className="w-full px-6 md:px-12 lg:px-20">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/">
+          <Link href="/" aria-label="CLARITY — חזרה לדף הבית">
             <Image src="/LOGO.png" alt="CLARITY" width={200} height={56} priority className="h-auto w-[140px] md:w-[200px]" />
           </Link>
 

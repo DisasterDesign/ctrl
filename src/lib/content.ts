@@ -268,7 +268,7 @@ export const siteContent = {
       { label: "מדיניות פרטיות", href: "/privacy" },
       { label: "תנאי שימוש", href: "/terms" },
     ],
-    copyright: "© 2025 CLARITY. כל הזכויות שמורות.",
+    copyright: `© ${new Date().getFullYear()} CLARITY. כל הזכויות שמורות.`,
     madeWith: "built by fuzion",
   },
 

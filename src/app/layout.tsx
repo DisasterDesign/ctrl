@@ -25,14 +25,22 @@ export const metadata: Metadata = {
     "סדר בעסק",
   ],
   icons: {
-    icon: "/FABICON.png",
-    apple: "/FABICON.png",
+    icon: "/favicon.png",
+    apple: "/favicon.png",
   },
   openGraph: {
     title: "CLARITY | ניהול פיננסי ותפעולי לבעלי עסקים",
     description: "בהירות בעסק. שקט בניהול. סדר בכספים, בתהליכים ובניהול השוטף.",
     locale: "he_IL",
     type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "CLARITY — בהירות בעסק. שקט בניהול.",
+      },
+    ],
   },
 };
 

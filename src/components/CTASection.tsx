@@ -11,7 +11,8 @@ export default function CTASection() {
   const [message, setMessage] = useState("");
   const { cta, business } = siteContent;
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = (e: React.FormEvent) => {
+    e.preventDefault();
     const parts = [];
     if (name) parts.push(`שם: ${name}`);
     if (phone) parts.push(`טלפון: ${phone}`);
@@ -55,23 +56,37 @@ export default function CTASection() {
 
           {/* Contact Form */}
           <FadeIn delay={0.2}>
-            <div className="bg-white rounded-2xl p-6 md:p-8 lg:p-10 border border-[rgba(0,0,0,0.08)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+            <form
+              onSubmit={handleSubmitForm}
+              className="bg-white rounded-2xl p-6 md:p-8 lg:p-10 border border-[rgba(0,0,0,0.08)] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+            >
               <div className="space-y-4">
+                <label htmlFor="fullName" className="sr-only">שם מלא</label>
                 <input
                   type="text"
+                  id="fullName"
+                  name="fullName"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={cta.form.namePlaceholder}
                   className="w-full px-4 py-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg text-black placeholder-[#666666] focus:border-[#3848FE] focus:ring-1 focus:ring-[#3848FE] transition-all"
                 />
+                <label htmlFor="phone" className="sr-only">מספר טלפון</label>
                 <input
                   type="tel"
+                  id="phone"
+                  name="phone"
+                  required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={cta.form.phonePlaceholder}
                   className="w-full px-4 py-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg text-black placeholder-[#666666] focus:border-[#3848FE] focus:ring-1 focus:ring-[#3848FE] transition-all"
                 />
+                <label htmlFor="message" className="sr-only">במה היית רוצה יותר בהירות?</label>
                 <textarea
+                  id="message"
+                  name="message"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={cta.form.messagePlaceholder}
@@ -79,7 +94,7 @@ export default function CTASection() {
                   className="w-full px-4 py-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg text-black placeholder-[#666666] focus:border-[#3848FE] focus:ring-1 focus:ring-[#3848FE] transition-all resize-none"
                 />
                 <button
-                  onClick={handleSubmitForm}
+                  type="submit"
                   className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-[#3848FE] hover:bg-[#2B35CC] text-white font-medium rounded-full transition-colors duration-300"
                 >
                   <MessageCircle className="w-5 h-5" />
@@ -89,7 +104,7 @@ export default function CTASection() {
                   {cta.form.privacy}
                 </p>
               </div>
-            </div>
+            </form>
           </FadeIn>
         </div>
       </div>
